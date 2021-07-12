@@ -24,7 +24,7 @@ public class NetworkClient extends NetworkHandler {
             input  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     		
     		// sends output to the socket
-            output = new PrintWriter(socket.getOutputStream());
+            output = new PrintWriter(socket.getOutputStream(), true);
     	}
     	catch(Exception e) {
     		//e.printStackTrace();
