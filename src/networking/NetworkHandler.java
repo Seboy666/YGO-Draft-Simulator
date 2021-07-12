@@ -21,10 +21,13 @@ public abstract class NetworkHandler {
     
 	public static final String MSG_SEPARATOR = "::";
 	
+	public static final String USERNAME_REQ_MSG = "USERNAMEREQ";
+	
 	/**
 	 * Append the current player username to this string
 	 */
 	public static final String CONN_REQ_OUTBOUND_MSG_START = "CREQ::";
+	public static final int CONN_REQ_OUTBOUND_MSG_USERNAME_INDEX = 1;
 	
 	/**
 	 * Appended to this string should be the starting player ID, then the number of
