@@ -122,15 +122,17 @@ public class NetworkServer extends NetworkHandler {
 			try {
 				in = new Scanner(socket.getInputStream());
 				out = new PrintWriter(socket.getOutputStream(), true);
-
+				out.println(USERNAME_REQ_MSG); // request the player's username
 				// Wait for the player to submit a username
 				while (true) {
-					fromServer = in.nextLine();
-					if (fromServer == null) {
+					fromClient = in.nextLine();
+					System.out.println("Read from client : " + fromClient);
+					if (fromClient == null) {
 						return; // Does this line stop this thread?
 					}
 					synchronized (playerList) {
-						thisPlayer = new Player(fromServer, nextPlayerID);
+						String playerName = fromClient.split(MSG_SEPARATOR)[CONN_REQ_OUTBOUND_MSG_USERNAME_INDEX];
+						thisPlayer = new Player(playerName, nextPlayerID);
 						playerList.add(thisPlayer); // this *should* keep players in the right order, but even if they aren't, it may not cause any problems
 						nextPlayerID++;
 						thisClient = new ClientInfoHolder(thisPlayer, socket, in, out);
