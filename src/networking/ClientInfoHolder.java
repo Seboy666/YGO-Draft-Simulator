@@ -20,11 +20,11 @@ public class ClientInfoHolder {
 		this.out = out;
 	}
 	
-	public synchronized void sendMsg(String msg) { out.println(msg); }
+	public void sendMsg(String msg) { out.println(msg); }
 	
-	public synchronized String receiveMsg() { return in.nextLine(); }
+	public String receiveMsg() { return in.nextLine(); }
 	
-	public synchronized void sendUpdatedCardList(String[] cardNames) {
+	public void sendUpdatedCardList(String[] cardNames) {
 		String theMessage = NetworkHandler.UPDATE_CARD_LIST_MSG_START;
 		for(String each : cardNames) {
 			theMessage = theMessage + each + NetworkHandler.MSG_SEPARATOR;

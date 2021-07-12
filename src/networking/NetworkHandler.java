@@ -83,7 +83,7 @@ public abstract class NetworkHandler {
 		return toReturn;
 	}
 	
-	public synchronized String readInputLine() throws IOException {
+	public String readInputLine() throws IOException {
 		String test = input.readLine();
 		System.out.println("Read line : " + test);
 		return test; 
