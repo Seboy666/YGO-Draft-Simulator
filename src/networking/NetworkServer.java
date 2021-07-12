@@ -54,7 +54,7 @@ public class NetworkServer extends NetworkHandler {
 	public void broadcastStartGame(int startingPlayerID, int cardsPerRound) {
 		String theMsg = CONN_REQ_ANSWER_START + startingPlayerID + MSG_SEPARATOR + cardsPerRound;
 		for(Player each : playerList) {
-			theMsg = theMsg + MSG_SEPARATOR + each.getUsername();
+			theMsg = theMsg + MSG_SEPARATOR + each.getUsername() + MSG_SEPARATOR + each.getID();
 		}
 		for(ClientInfoHolder each : clientSet) {
 			each.sendMsg(theMsg);
