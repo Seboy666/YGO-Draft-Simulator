@@ -65,12 +65,18 @@ public class FirstGUI {
 				String username = usernameTxtField.getText();
 				String ip = ipTxtField.getText();
 				NetworkClient networkHandler = new NetworkClient(username, ip); // connect to server here
-				Session_Client mySession = networkHandler.connectAndWaitToStart();
-				frame.dispose();
-				DraftSessionGUI draftSession = new DraftSessionGUI(mySession);
-				draftSession.createMainWindow();
-				draftSession.backgroundNetworkListenerLoop(networkHandler);
-				mySession.shuffleCards(); // sends a first request to the server to fill the card list
+				try {
+					Session_Client mySession = networkHandler.connectAndWaitToStart();
+					frame.dispose();
+					DraftSessionGUI draftSession = new DraftSessionGUI(mySession);
+					draftSession.createMainWindow();
+					draftSession.backgroundNetworkListenerLoop(networkHandler);
+					mySession.shuffleCards(); // sends a first request to the server to fill the card list
+				}
+				catch(NullPointerException ex) {
+					System.err.println(ex + " Error, shutting down...");
+				}
+				
 			}
 		});
 		
