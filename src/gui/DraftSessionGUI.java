@@ -55,7 +55,8 @@ public class DraftSessionGUI {
 		floatingCardInfoPanel = new JPanel();
 		floatingCardFrame.setContentPane(floatingCardInfoPanel);
 		
-		JFrame frame = new JFrame("YGO Draft Simulator");
+		// Create a JFrame with a title, append to that title the player's username
+		JFrame frame = new JFrame("YGO Draft Simulator - " + mySession.getPlayerByID(mySession.getMyPlayerID()).getUsername());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 		    public void windowClosing(WindowEvent e) {
