@@ -53,7 +53,7 @@ public class Session_Host extends Session {
 	}
 	
 	@Override
-	public void shuffleCards() {
+	public synchronized void shuffleCards() {
 		cardList.clear();
 		
 		int rndIndex;

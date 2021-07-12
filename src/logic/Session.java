@@ -51,7 +51,7 @@ public abstract class Session {
 		}
 	}
 	
-	public String[] getCardNamesAsArray() {
+	public synchronized String[] getCardNamesAsArray() {
 		String[] myNameArray = new String[cardList.size()];
 		for(int i = 0; i < cardList.size(); i++) { // this should keep the order
 			myNameArray[i] = cardList.get(i).getFormattedName();
