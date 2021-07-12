@@ -42,26 +42,6 @@ public class DraftSessionGUI {
 		this.cardListPanel = new JPanel();
 		this.menuInfo = new JMenu("Info");
 		allowClick = true;
-		/*if(mySession.isClient()) {
-			// client
-			SwingWorker worker = new SwingWorker<ImageIcon[], Void>() {
-			    @Override
-			    public ImageIcon[] doInBackground() {
-			        
-			        return innerImgs;
-			    }
-
-			    @Override
-			    public void done() {
-			        
-			        
-			    }
-			};
-		}
-		else {
-			// host
-			
-		}*/
 	}
 	
 	public Session getSession() { return mySession; }
