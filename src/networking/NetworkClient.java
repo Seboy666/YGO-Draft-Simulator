@@ -59,26 +59,31 @@ public class NetworkClient extends NetworkHandler {
 		while(true) {
 			try
             {
-				output.println(CONN_REQ_OUTBOUND_MSG_START + myUsername);
                 answer = readInputLine();
             }
             catch(Exception i)
             {
             	//System.err.println(i);
             	i.printStackTrace();
+            	return null;
             }
+			
+			if(answer.startsWith(USERNAME_REQ_MSG)) {
+				output.println(CONN_REQ_OUTBOUND_MSG_START + myUsername);
+			}
 			if(answer.startsWith(CONN_REQ_ANSWER_START)) {
+				System.out.println("Starting game...");
 				break;
 			}
 		}
-		String[] decode = answer.split(MSG_SEPARATOR); // array should be [LAUNCH][cardsPerRound][startingPlayerID][username][id][username][id]... etc.
+		String[] decode = answer.split(MSG_SEPARATOR); // array should be [LAUNCH][startingPlayerID][cardsPerRound][username][id][username][id]... etc.
 		int startingPlayerID = Integer.parseInt(decode[STARTING_PLAYER_ID_INDEX]);
 		int cardsPerRound = Integer.parseInt(decode[CARDS_PER_ROUND_INDEX]);
 		List<Player> playerList = new ArrayList<Player>();
 		Player tempPlayer;
 		int myPlayerID = 0;
-		for(int i = FIRST_USERNAME_INDEX; i <= decode.length; i = i+2) {
-			if(decode[i] == myUsername) {
+		for(int i = FIRST_USERNAME_INDEX; i < decode.length; i = i+2) {
+			if(decode[i].equals(myUsername)) {
 				myPlayerID = Integer.parseInt(decode[i+1]);
 			}
 			tempPlayer = new Player(decode[i], Integer.parseInt(decode[i+1]));
