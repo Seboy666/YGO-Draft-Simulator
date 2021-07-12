@@ -3,10 +3,6 @@ package logic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import javax.swing.ImageIcon;
-import javax.swing.SwingWorker;
-
 import cards.Card;
 import networking.NetworkServer;
 import readexternaldata.DatabaseReader;

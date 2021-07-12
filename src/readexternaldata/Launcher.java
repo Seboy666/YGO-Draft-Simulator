@@ -3,8 +3,6 @@ package readexternaldata;
 import javax.swing.SwingUtilities;
 
 import gui.*;
-import logic.*;
-import networking.*;
 
 public class Launcher {
 	
