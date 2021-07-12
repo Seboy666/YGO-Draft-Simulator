@@ -96,7 +96,7 @@ public class NetworkServer extends NetworkHandler {
      * The client handler task.
      */
 	private static class LoginHandler implements Runnable {
-		private String fromServer;
+		private String fromClient;
 		private Player thisPlayer;
 		private Socket socket;
 		private Scanner in;
