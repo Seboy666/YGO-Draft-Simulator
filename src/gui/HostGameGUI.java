@@ -201,13 +201,19 @@ public class HostGameGUI {
 	 * connect are given an ID and are added to the playerList.
 	 */
 	private void listenForPlayers() {
-		new SwingWorker<Void, Void>() {
-		    @Override
-		    public Void doInBackground() {
-		    	network.listenForConnectingPlayers(playerList);
-				return null;
-		    }
-		}.execute();
+		Thread bgThread = new Thread(new PlayerListener());
+		bgThread.start();
+	}
+	
+	private class PlayerListener implements Runnable {
+		
+		public PlayerListener() {}
+		
+		@Override
+		public void run() {
+			network.listenForConnectingPlayers(playerList);
+		}
+		
 	}
 	
 }
