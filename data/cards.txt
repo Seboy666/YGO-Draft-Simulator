@@ -1372,7 +1372,6 @@ Key_Mace_#2	Monster
 Key_Mouse	Monster
 Killer_Needle	Monster
 King_Fog	Monster
-King_of_Destruction_-_Xexex	Monster
 King_of_the_Beasts	Monster
 King_of_the_Skull_Servants	Monster
 King_of_the_Swamp	Monster
