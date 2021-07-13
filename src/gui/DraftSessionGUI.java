@@ -108,19 +108,9 @@ public class DraftSessionGUI {
 		addDeckExtractionToSettingsMenu(menuSettings);
 		
 		updateInfoMenu(menuInfo);
-		
-		JMenu menuGame = new JMenu("Game");
-		JMenuItem newRoundMnItem = new JMenuItem("Start new round");
-		newRoundMnItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { 
-				startNewRound();
-			}
-		});
-		menuGame.add(newRoundMnItem);
 
 		menuBar.add(menuSettings);
 		menuBar.add(menuInfo);
-		menuBar.add(menuGame);
 		
 		frame.setVisible(true);
 	}
@@ -144,15 +134,6 @@ public class DraftSessionGUI {
 				}
 			});
 		}
-	}
-	
-	public void startNewRound() { // TODO: not allowed for clients, maybe disable this method entirely?
-		mySession.nextRound();
-		cardListPanel.removeAll();
-		populateLeftCardPanel(cardListPanel);
-		cardListPanel.repaint();
-		cardListPanel.revalidate();
-		updateInfoMenu(menuInfo);
 	}
 	
 	private JPanel populateLeftCardPanel(JPanel leftPanel) {
