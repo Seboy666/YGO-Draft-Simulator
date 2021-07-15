@@ -9,7 +9,7 @@ public class WeightedRandomBag<T extends Object> {
         double weight;
         T object;
         
-        public Entry(double weight, T object) {
+        public Entry(T object, double weight) {
         	this.weight = weight;
         	this.object = object;
         }
