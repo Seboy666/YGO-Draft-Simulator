@@ -20,7 +20,7 @@ public class WeightedRandomBag<T extends Object> {
     private Random rand = new Random();
     
     public void addEntry(T object, double weight) {
-        Entry e = new Entry(weight, object);
+        Entry e = new Entry(object, weight);
         entries.add(e);
         double tempWeight = 0;
         for (Entry entry: entries) {
