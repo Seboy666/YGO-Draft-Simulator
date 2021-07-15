@@ -16,7 +16,7 @@ public class WeightedRandomBag<T extends Object> {
     }
 
     private List<Entry> entries = new ArrayList<>();
-    private double totalWeight;
+    private double totalWeight = 0;
     private Random rand = new Random();
     private static final double STANDARD_WEIGHT = 1.0d;
     
