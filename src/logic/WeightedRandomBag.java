@@ -35,17 +35,31 @@ public class WeightedRandomBag<T extends Object> {
     }
     
     public void addEntry(T object, double weight) {
-    	if(weight <= 0.0d) {
+    	if(weight <= 0.0d) { // weight should always be positive
     		weight = STANDARD_WEIGHT;
     	}
-        Entry e = new Entry(object, weight);
-        entries.add(e);
-        totalWeight += weight;
+        addEntry(new Entry(object, weight));
     }
     
-    public void addEntry(Entry newEntry) {
+    private void addEntry(Entry newEntry) {
         entries.add(newEntry);
         totalWeight += newEntry.weight;
+    }
+    
+    public void removeEntry(T object) {
+    	for(Entry entry : entries) {
+    		if(entry.object.equals(object)) {
+    			removeEntry(entry);
+    	    	return;
+    		}
+    	}
+    }
+    
+    private void removeEntry(Entry entry) {
+    	if(totalWeight > 0) { // weight should always be positive
+    		totalWeight -= entry.weight;
+    	}
+    	entries.remove(entry);
     }
     
 	/**
