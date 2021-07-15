@@ -119,7 +119,7 @@ public class DatabaseReader {
 	
 	private void makeCardNamesDB() {
 		cardNames.concatenate(mainDeckCards);
-		cardNames.concatenate(spellAndTrapCards);
+		cardNames.concatenate(extraDeckAndRitualCards);
 	}
 	
 	private List<String[]> makeDatabaseFromTxt() {
