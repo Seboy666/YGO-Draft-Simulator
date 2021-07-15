@@ -85,8 +85,7 @@ public class WeightedRandomBag<T extends Object> {
     public void modifyWeight(T object, double newWeight) {
     	for (Entry entry: entries) {
     		if(entry.object.equals(object)) {
-    			double oldWeight = entry.weight;
-    	    	totalWeight = (totalWeight - oldWeight) + newWeight;
+    	    	totalWeight = (totalWeight - entry.weight) + newWeight;
     	    	entry.weight = newWeight;
     	    	return;
     		}
