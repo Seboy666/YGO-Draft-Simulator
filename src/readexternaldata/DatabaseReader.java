@@ -106,50 +106,78 @@ public class DatabaseReader {
 		}
 	}
 	
-	private void makeListOfThisColor(String color, List<String> list) {
+	private void makeAllColoredWeightedBags() {
 		for(String[] each : namesAndColorsDB) {
-			if(each[1].equals(color)) {
-				list.add(each[0]);
+			if(each[1].equals(STR_FUSION)) {
+				fusionCards.addEntry(each[0], DEFAULT_WEIGHT);
+			}
+			else if(each[1].equals(STR_MONSTER)) {
+				monsterCards.addEntry(each[0], DEFAULT_WEIGHT);
+			}
+			else if(each[1].equals(STR_RITUAL)) {
+				ritualCards.addEntry(each[0], DEFAULT_WEIGHT);
+			}
+			else if(each[1].equals(STR_SPELL)) {
+				spellCards.addEntry(each[0], DEFAULT_WEIGHT);
+			}
+			else if(each[1].equals(STR_SYNCHRO)) {
+				synchroCards.addEntry(each[0], DEFAULT_WEIGHT);
+			}
+			else if(each[1].equals(STR_TRAP)) {
+				trapCards.addEntry(each[0], DEFAULT_WEIGHT);
+			}
+			else if(each[1].equals(STR_TUNER)) {
+				tunerCards.addEntry(each[0], DEFAULT_WEIGHT);
+			}
+			else if(each[1].equals(STR_XYZ)) {
+				xyzCards.addEntry(each[0], DEFAULT_WEIGHT);
 			}
 		}
 	}
 	
-	/*
-	 * Makes two lists, one that is the same as the other, but with rituals added in
+	/**
+	 * Fills the weighted bag with formatted card names that match the given color.
+	 * All elements will be given the default weight.
+	 * 
+	 * @param color The card color with which we want the bag to be filled.
+	 * @param bag   The bag we want to fill.
 	 */
-	private void makeExtraDeckAndRitualsLists() {
+	private void makeWeightedBagOfThisColor(String color, WeightedRandomBag<String> bag) {
 		for(String[] each : namesAndColorsDB) {
-			if(each[1].equals("Fusion") || each[1].equals("Synchro") || each[1].equals("Xyz")) {
-				extraDeckAndRitualCards.add(each[0]);
-				extraDeckCards.add(each[0]);
-			}
-			else if(each[1].equals("Ritual")) {
-				extraDeckAndRitualCards.add(each[0]);
+			if(each[1].equals(color)) {
+				bag.addEntry(each[0], DEFAULT_WEIGHT);
 			}
 		}
+	}
+	
+	/**
+	 * Makes a list containing Fusion, Synchro and Xyz, as well as a bag containing
+	 * Fusion, Synchro, Xyz and Rituals.
+	 */
+	private void makeExtraDeckAndRitualsLists() {
+		makeExtraDeckList();
+		
+		extraDeckAndRitualCards.concatenate(extraDeckCards);
+		extraDeckAndRitualCards.concatenate(ritualCards);
 	}
 	
 	private void makeExtraDeckList() {
-		for(String[] each : namesAndColorsDB) {
-			if(each[1].equals("Fusion") || each[1].equals("Synchro") || each[1].equals("Xyz")) {
-				extraDeckCards.add(each[0]);
-			}
-		}
+		extraDeckCards.concatenate(fusionCards); // this should make the bags share references, which is desired
+		extraDeckCards.concatenate(synchroCards);
+		extraDeckCards.concatenate(xyzCards);
 	}
 	
-	/*
-	 * Makes two lists, one that is the same as the other, but with monsters added in
+	/**
+	 * Makes a bag containing Spell and Traps, as well as a bag containing Spell,
+	 * Traps, Monsters and Tuners.
 	 */
 	private void makeMainDeckLists() {
-		for(String[] each : namesAndColorsDB) {
-			if(each[1].equals("Spell") || each[1].equals("Trap")) {
-				mainDeckCards.add(each[0]);
-				spellAndTrapCards.add(each[0]);
-			}
-			else if(each[1].equals("Monster")) {
-				mainDeckCards.add(each[0]);
-			}
-		}
+		spellAndTrapCards.concatenate(spellCards);
+		spellAndTrapCards.concatenate(trapCards);
+		
+		mainDeckCards.concatenate(spellAndTrapCards);
+		mainDeckCards.concatenate(monsterCards);
+		mainDeckCards.concatenate(tunerCards);
 	}
 	
 }
