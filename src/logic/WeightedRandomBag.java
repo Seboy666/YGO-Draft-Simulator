@@ -95,12 +95,20 @@ public class WeightedRandomBag<T extends Object> {
     }
 
     public T getRandom() {
-        double r = rand.nextDouble() * totalWeight;
+        return getRandom(false);
+    }
+    
+    public T getRandom(boolean withElim) {
+    	double r = rand.nextDouble() * totalWeight;
         double accumulatedWeight = 0;
         for (Entry entry: entries) {
         	accumulatedWeight += entry.weight;
             if (accumulatedWeight >= r) {
-                return entry.object;
+                T obj = entry.object;
+                if(withElim) {
+                	removeEntry(entry);
+                }
+                return obj;
             }
         }
         System.out.println("Cannot get random entry!");
