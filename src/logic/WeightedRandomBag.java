@@ -22,11 +22,7 @@ public class WeightedRandomBag<T extends Object> {
     public void addEntry(T object, double weight) {
         Entry e = new Entry(object, weight);
         entries.add(e);
-        double tempWeight = 0;
-        for (Entry entry: entries) {
-        	tempWeight += entry.weight;
-        }
-        totalWeight = tempWeight;
+        totalWeight += weight;
     }
     
     /**
@@ -69,6 +65,7 @@ public class WeightedRandomBag<T extends Object> {
                 return entry.object;
             }
         }
+        System.out.println("Cannot get random entry!");
         return null; //should only happen when there are no entries
     }
 }
