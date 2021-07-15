@@ -4,79 +4,122 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import logic.WeightedRandomBag;
 
 public class DatabaseReader {
 	private List<String[]> namesAndColorsDB; // cards and their color (spell, trap, monster, ritual, fusion, etc.)
-	private List<String> cardNames; // just card names
+	private WeightedRandomBag<String> cardNames; // just card names
 	
-	private List<String> fusionCards; // lists for single colors
-	private List<String> monsterCards;
-	private List<String> ritualCards;
-	private List<String> spellCards;
-	private List<String> synchroCards;
-	private List<String> trapCards;
-	private List<String> xyzCards;
+	private WeightedRandomBag<String> fusionCards; // lists for single colors
+	private WeightedRandomBag<String> monsterCards;
+	private WeightedRandomBag<String> ritualCards;
+	private WeightedRandomBag<String> spellCards;
+	private WeightedRandomBag<String> synchroCards;
+	private WeightedRandomBag<String> trapCards;
+	private WeightedRandomBag<String> tunerCards;
+	private WeightedRandomBag<String> xyzCards;
 	
-	private List<String> extraDeckAndRitualCards; // Fusion, synchros, xyz and rituals
-	private List<String> extraDeckCards; // Fusion, synchros and xyz
-	private List<String> mainDeckCards; // spell, traps and monsters, NO RITUALS
-	private List<String> spellAndTrapCards; // just spell and traps
+	private WeightedRandomBag<String> extraDeckAndRitualCards; // Fusion, synchros, xyz and rituals
+	private WeightedRandomBag<String> extraDeckCards; // Fusion, synchros and xyz
+	private WeightedRandomBag<String> mainDeckCards; // spell, traps and monsters, NO RITUALS
+	private WeightedRandomBag<String> spellAndTrapCards; // just spell and traps
+	
+	private static final double DEFAULT_WEIGHT = 1.0d;
+	private static final String STR_FUSION = "Fusion";
+	private static final String STR_MONSTER = "Monster";
+	private static final String STR_RITUAL = "Ritual";
+	private static final String STR_SPELL = "Spell";
+	private static final String STR_SYNCHRO = "Synchro";
+	private static final String STR_TRAP = "Trap";
+	private static final String STR_TUNER = "Tuner";
+	private static final String STR_XYZ = "Xyz";
 	
 	public DatabaseReader() {
 		namesAndColorsDB = makeDatabaseFromTxt(); // create entire DB
 		
-		this.cardNames = new ArrayList<String>(); // initialize all member variables
-		this.fusionCards = new ArrayList<String>();
-		this.monsterCards = new ArrayList<String>();
-		this.ritualCards = new ArrayList<String>();
-		this.spellCards = new ArrayList<String>();
-		this.synchroCards = new ArrayList<String>();
-		this.trapCards = new ArrayList<String>();
-		this.xyzCards = new ArrayList<String>();
+		this.cardNames = new WeightedRandomBag<String>(); // initialize all member variables
+		this.fusionCards = new WeightedRandomBag<String>();
+		this.monsterCards = new WeightedRandomBag<String>();
+		this.ritualCards = new WeightedRandomBag<String>();
+		this.spellCards = new WeightedRandomBag<String>();
+		this.synchroCards = new WeightedRandomBag<String>();
+		this.trapCards = new WeightedRandomBag<String>();
+		this.tunerCards = new WeightedRandomBag<String>();
+		this.xyzCards = new WeightedRandomBag<String>();
 		
-		extraDeckAndRitualCards = new ArrayList<String>();
-		extraDeckCards = new ArrayList<String>();
-		mainDeckCards = new ArrayList<String>();
-		spellAndTrapCards = new ArrayList<String>();
+		extraDeckAndRitualCards = new WeightedRandomBag<String>(); // Bags that include multiple colors
+		extraDeckCards = new WeightedRandomBag<String>();
+		mainDeckCards = new WeightedRandomBag<String>();
+		spellAndTrapCards = new WeightedRandomBag<String>();
 		
-		makeCardNamesDB(); // fill all lists
-		makeListOfThisColor("Fusion", fusionCards);
-		makeListOfThisColor("Monster", monsterCards);
-		makeListOfThisColor("Ritual", ritualCards);
-		makeListOfThisColor("Spell", spellCards);
-		makeListOfThisColor("Synchro", synchroCards);
-		makeListOfThisColor("Trap", trapCards);
-		makeListOfThisColor("Xyz", xyzCards);
+		makeAllColoredWeightedBags();
 		
 		makeExtraDeckAndRitualsLists();
 		makeMainDeckLists();
+		
+		makeCardNamesDB();
 	}
 	
 	
 	public List<String[]> getFullDB() { return namesAndColorsDB; }
 	
-	public List<String> getCardNames() { return cardNames; }
+	public WeightedRandomBag<String> getCardNames() { return cardNames; }
 	
-	public List<String> getFusionCardNames() { return fusionCards; }
-	public List<String> getMonsterCardNames() { return monsterCards; }
-	public List<String> getRitualCardNames() { return ritualCards; }
-	public List<String> getSpellCardNames() { return spellCards; }
-	public List<String> getSynchroCardNames() { return synchroCards; }
-	public List<String> getTrapCardNames() { return trapCards; }
-	public List<String> getXyzCardNames() { return xyzCards; }
+	public WeightedRandomBag<String> getFusionCardNames() { return fusionCards; }
+	public WeightedRandomBag<String> getMonsterCardNames() { return monsterCards; }
+	public WeightedRandomBag<String> getRitualCardNames() { return ritualCards; }
+	public WeightedRandomBag<String> getSpellCardNames() { return spellCards; }
+	public WeightedRandomBag<String> getSynchroCardNames() { return synchroCards; }
+	public WeightedRandomBag<String> getTrapCardNames() { return trapCards; }
+	public WeightedRandomBag<String> getTunerCardNames() { return tunerCards; }
+	public WeightedRandomBag<String> getXyzCardNames() { return xyzCards; }
 	
-	public List<String> getExtraAndRitualCardNames() { return extraDeckAndRitualCards; }
-	public List<String> getExtraDeckCardNames() { return extraDeckCards; }
-	public List<String> getMainDeckCardNames() { return mainDeckCards; }
-	public List<String> getSpellAndTrapCardNames() { return spellAndTrapCards; }
+	public WeightedRandomBag<String> getExtraAndRitualCardNames() { return extraDeckAndRitualCards; }
+	public WeightedRandomBag<String> getExtraDeckCardNames() { return extraDeckCards; }
 	
+	/**
+	 * Does NOT contain ritual cards. Contains all monsters, tuners, spells and traps in the
+	 * whole database.
+	 * 
+	 * @return The main deck card bag
+	 */
+	public WeightedRandomBag<String> getMainDeckCardNames() { return mainDeckCards; }
+	public WeightedRandomBag<String> getSpellAndTrapCardNames() { return spellAndTrapCards; }
 	
+	public String getRandomExtraAndRitualCard(boolean withElim) {
+		return extraDeckAndRitualCards.getRandom(withElim);
+	}
 	
+	public String getRandomExtraDeckCard(boolean withElim) {
+		return extraDeckCards.getRandom(withElim);
+	}
+	
+	public String getRandomMainDeckCard(boolean withElim) {
+		return mainDeckCards.getRandom(withElim);
+	}
+	
+	public String getRandomSpellTrapCard(boolean withElim) {
+		return spellAndTrapCards.getRandom(withElim);
+	}
+	
+	/**
+	 * Safely changes the weight of the card with the given name by updating the
+	 * total weight of all card bags.
+	 * 
+	 * @param formattedCardName The name of the card whose weight we want to modify.
+	 * @param newWeight The new weight given to the card.
+	 */
+	public void buffCardWeight(String formattedCardName, double newWeight) {
+		cardNames.modifyWeight(formattedCardName, newWeight);
+		
+		mainDeckCards.recalcTotalWeight();
+		spellAndTrapCards.recalcTotalWeight();
+		extraDeckAndRitualCards.recalcTotalWeight();
+	}
 	
 	private void makeCardNamesDB() {
-		for(int i = 0; i < namesAndColorsDB.size(); i++) {
-			cardNames.add(namesAndColorsDB.get(i)[0]);
-		}
+		cardNames.concatenate(mainDeckCards);
+		cardNames.concatenate(spellAndTrapCards);
 	}
 	
 	private List<String[]> makeDatabaseFromTxt() {
