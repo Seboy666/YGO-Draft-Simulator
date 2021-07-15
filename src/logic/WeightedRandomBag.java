@@ -18,6 +18,7 @@ public class WeightedRandomBag<T extends Object> {
     private List<Entry> entries = new ArrayList<>();
     private double totalWeight;
     private Random rand = new Random();
+    private static final double STANDARD_WEIGHT = 1.0d;
     
     public void recalcTotalWeight() {
     	double tempWeight = 0;
@@ -34,6 +35,9 @@ public class WeightedRandomBag<T extends Object> {
     }
     
     public void addEntry(T object, double weight) {
+    	if(weight <= 0.0d) {
+    		weight = STANDARD_WEIGHT;
+    	}
         Entry e = new Entry(object, weight);
         entries.add(e);
         totalWeight += weight;
