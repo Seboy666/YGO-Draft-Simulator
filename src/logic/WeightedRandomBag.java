@@ -19,18 +19,38 @@ public class WeightedRandomBag<T extends Object> {
     private double totalWeight;
     private Random rand = new Random();
     
+    public void recalcTotalWeight() {
+    	double tempWeight = 0;
+    	for(Entry each : entries) {
+    		tempWeight += each.weight;
+    	}
+    	totalWeight = tempWeight;
+    }
+    
+    public void concatenate(WeightedRandomBag<T> bag) {
+    	for(Entry each : bag.entries) {
+    		this.addEntry(each);
+    	}
+    }
+    
     public void addEntry(T object, double weight) {
         Entry e = new Entry(object, weight);
         entries.add(e);
         totalWeight += weight;
     }
     
-    /**
-     * Modifies the weight of the object at the given index.
-     * 
-     * @param index The index
-     * @param newWeight The new weight we want to give it
-     */
+    public void addEntry(Entry newEntry) {
+        entries.add(newEntry);
+        totalWeight += newEntry.weight;
+    }
+    
+	/**
+	 * Modifies the weight of the object at the given index. Ensures this object's
+	 * totalWeight variable to be of the correct value.
+	 * 
+	 * @param index     The index
+	 * @param newWeight The new weight we want to give it
+	 */
     public void modifyWeight(int index, double newWeight) {
     	double oldWeight = entries.get(index).weight;
     	totalWeight = (totalWeight - oldWeight) + newWeight;
@@ -39,6 +59,7 @@ public class WeightedRandomBag<T extends Object> {
     
     /**
      * Finds the entry containing the given object, and modifies its weight to newWeight.
+     * Ensures this object's totalWeight variable to be of the correct value.
      * 
      * @param object The object whose weight we want to modify
      * @param newWeight The new weight we want to give it
