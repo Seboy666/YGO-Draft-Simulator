@@ -73,12 +73,6 @@ public class URLParser {
 				}
 			}
 			return cardToReturn;
-			
-			/*
-			Element hasSynchroMaterials = cardtablerow.select("a[title=Synchro Material]").first();
-			Element hasFusionMaterials = cardtablerow.select("a[title=Fusion Material]").first();
-			*/
-			
 		}
 		catch(Exception e) {
 			System.out.println(e);
