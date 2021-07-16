@@ -81,4 +81,19 @@ public class URLParser {
 			return cardToReturn;
 		}
 	}
+	
+	private static final String URL_CHUNK = "/wiki/";
+	private static final String APOSTROPHE = "%27";
+	
+	private static void formatNames(List<String> list) {
+		List<String> output = new ArrayList<String>(list);
+		String temp = "";
+		list.clear();
+		for(String each : output) {
+			temp = each.replaceAll(URL_CHUNK, ""); // removes /wiki/ from the formatted card name
+			temp = temp.replaceAll(APOSTROPHE, "'");
+			list.add(temp);
+		}
+	}
+	
 }
