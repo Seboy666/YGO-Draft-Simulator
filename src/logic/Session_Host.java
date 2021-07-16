@@ -56,28 +56,24 @@ public class Session_Host extends Session {
 	public synchronized void shuffleCards() {
 		cardList.clear();
 		
-		int rndIndex;
-		String cardName;
+		String formattedCardName;
 		Card card;
 		
 		for(int i = 0; i < main_deck_cards_per_round; i++) {
-			rndIndex = new Random().nextInt(db.getMainDeckCardNames().size()); // get a random main deck card name
-			cardName = db.getMainDeckCardNames().get(rndIndex);
-			card = URLParser.parseCardNameToCard(cardName);
+			formattedCardName = db.getRandomMainDeckCard(withElim);
+			card = URLParser.parseCardNameToCard(formattedCardName);
 			cardList.add(card);
 		}
 		
 		for(int j = 0; j < spells_traps_per_round; j++) {
-			rndIndex = new Random().nextInt(db.getSpellAndTrapCardNames().size()); // get a random S&T card name
-			cardName = db.getSpellAndTrapCardNames().get(rndIndex);
-			card = URLParser.parseCardNameToCard(cardName);
+			formattedCardName = db.getRandomSpellTrapCard(withElim);
+			card = URLParser.parseCardNameToCard(formattedCardName);
 			cardList.add(card);
 		}
 		
 		for(int k = 0; k < extra_and_rituals_per_round; k++) {
-			rndIndex = new Random().nextInt(db.getExtraAndRitualCardNames().size()); // get a random extra or ritual card name
-			cardName = db.getExtraAndRitualCardNames().get(rndIndex);
-			card = URLParser.parseCardNameToCard(cardName);
+			formattedCardName = db.getRandomExtraAndRitualCard(withElim);
+			card = URLParser.parseCardNameToCard(formattedCardName);
 			cardList.add(card);
 		}
 	}
