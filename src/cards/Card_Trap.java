@@ -1,11 +1,12 @@
 package cards;
 
 import java.awt.Image;
+import java.util.List;
 
 public class Card_Trap extends Card{
 	private String property; // continuous, counter, etc.
 	
-	public Card_Trap(String name, String color, String property, String passcode, String desc, String frmtdName, Image image){
+	public Card_Trap(String name, String color, String property, String passcode, String desc, String frmtdName, Image image, List<String> related){
 		this.name = name;
 		this.color = color;
 		this.isExtraDeck = false;
@@ -14,17 +15,11 @@ public class Card_Trap extends Card{
 		this.desc = desc;
 		this.formattedName = frmtdName;
 		this.cardImage = image;
+		this.related = related;
 	}
 	
-	public Card_Trap(String[] array, Image image) {
-		this.name = array[0];
-		this.color = array[1];
-		this.property = array[2];
-		this.passcode = array[3];
-		this.desc = array[4];
-		this.formattedName = array[5];
-		this.cardImage = image;
-		this.isExtraDeck = false;
+	public Card_Trap(String name, String color, String property, String passcode, String desc, String frmtdName, Image image) {
+		this(name, color, property, passcode, desc, frmtdName, image, null);
 	}
 	
 	@Override
