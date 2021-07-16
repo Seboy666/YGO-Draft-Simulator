@@ -25,8 +25,11 @@ public class DraftSessionGUI {
 	
 	private JPanel cardListPanel;
 	private JMenu menuInfo;
+	private JMenu menuPickingPlayerName;
 	private JFrame floatingCardFrame;
 	private JPanel floatingCardInfoPanel;
+	
+	private static final String NOW_PICKING_STR = "Now picking: ";
 	
 	/**
 	 * When set to false, buttons will not respond to clicks. Used to avoid
@@ -38,6 +41,7 @@ public class DraftSessionGUI {
 		mySession = session;
 		this.cardListPanel = new JPanel();
 		this.menuInfo = new JMenu("Info");
+		this.menuPickingPlayerName = new JMenu(NOW_PICKING_STR + mySession.getPickingPlayer().getUsername());
 		allowClick = true;
 	}
 	
@@ -107,10 +111,11 @@ public class DraftSessionGUI {
 		});
 		addDeckExtractionToSettingsMenu(menuSettings);
 		
-		updateInfoMenu(menuInfo);
+		updateMenu();
 
 		menuBar.add(menuSettings);
 		menuBar.add(menuInfo);
+		menuBar.add(menuPickingPlayerName);
 		
 		frame.setVisible(true);
 	}
@@ -232,7 +237,7 @@ public class DraftSessionGUI {
 		    @Override
 		    public void done() {
 		        try {
-		    		updateInfoMenu(menuInfo); // local
+		    		updateMenu(); // local
 		    		populateLeftCardPanel(cardListPanel); // local
 		    		cardListPanel.repaint(); // local
 		    		cardListPanel.revalidate(); // local
@@ -295,16 +300,17 @@ public class DraftSessionGUI {
 	 * 
 	 * @param infoMenu the info menu to be updated
 	 */
-	private void updateInfoMenu(JMenu infoMenu) {
-		infoMenu.removeAll();
+	private void updateMenu() {
+		menuInfo.removeAll();
 		JMenuItem roundMnItem = new JMenuItem("Round " + mySession.getRoundNumber());
 		JMenuItem turnMnItem = new JMenuItem("Turn " + mySession.getTurnNumber());
 		JMenuItem pickingPlayerMnItem = new JMenuItem("#" + mySession.getPickingPlayer().getID() + " (" + mySession.getPickingPlayer().getUsername() + ") is picking");
-		infoMenu.add(roundMnItem);
-		infoMenu.add(turnMnItem);
-		infoMenu.add(pickingPlayerMnItem);
-		infoMenu.repaint();
-		infoMenu.revalidate();
+		menuInfo.add(roundMnItem);
+		menuInfo.add(turnMnItem);
+		menuInfo.add(pickingPlayerMnItem);
+		menuPickingPlayerName.setText(NOW_PICKING_STR + mySession.getPickingPlayer().getUsername());
+		menuInfo.repaint();
+		menuInfo.revalidate();
 	}
 	
 	/**
@@ -416,7 +422,7 @@ public class DraftSessionGUI {
 				else if(incomingMsg.startsWith(NetworkHandler.UPDATE_CARD_LIST_MSG_START)) {
 					String[] cardNames = NetworkHandler.parseUpdateCardListMsg(incomingMsg);
 					mySession.resetAndFillCardList(cardNames);
-					updateInfoMenu(menuInfo); // TODO : might be unnecessary here
+					updateMenu(); // TODO : might be unnecessary here
 		    		populateLeftCardPanel(cardListPanel); // local
 		    		cardListPanel.repaint(); // local
 		    		cardListPanel.revalidate(); // local
