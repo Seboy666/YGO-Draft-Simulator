@@ -384,11 +384,6 @@ public class DraftSessionGUI {
 				else if(incomingMsg.startsWith(NetworkHandler.REQ_UPDATE_MSG_START)) {
 					String[] cardNames = mySession.getCardNamesAsArray();
 					thisClient.sendUpdatedCardList(cardNames);
-					//String[] cardNames = NetworkHandler.parseUpdateCardListMsg(incomingMsg);
-					//mySession.resetAndFillCardList(cardNames);
-		    		//populateLeftCardPanel(cardListPanel); // local
-		    		//cardListPanel.repaint(); // local
-		    		//cardListPanel.revalidate(); // local
 				}
 			}
 		}
