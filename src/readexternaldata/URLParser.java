@@ -15,6 +15,9 @@ import cards.*;
 public class URLParser {
 	
 	private static final String WIKI_URL_START = "https://yugioh.fandom.com/wiki/";
+	private static final String POLYMERIZATION_CARD_NAME = "Polymerization";
+	private static final String MASK_CHANGE_CARD_NAME = "Mask_Change";
+	private static final String DARK_FUSION_CARD_NAME = "Dark_Fusion";
 	
 	public static Card parseCardNameToCard(String formattedCardName) {
 		String name;
@@ -28,7 +31,7 @@ public class URLParser {
 		String def;
 		String passcode;
 		String desc; // the card description / text
-		List<String> related = null;
+		List<String> related = new ArrayList<String>();
 		Image image;
 		Card cardToReturn;
 		
@@ -59,6 +62,40 @@ public class URLParser {
 					isExtraDeck = true;
 					// get the end of the url of fusion materials as strings
 					related = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+					
+					try {
+						// check if this card is a contact fusion
+						List<String> isContact = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Contact Fusion)").eachText();
+						boolean throwExc = true;
+						for (String each : isContact) {
+							if(each.equals("Contact Fusion"))
+								throwExc = false; // if this monster is a contact fusion, we don't want to throw any exception
+						}
+						if(throwExc) {
+							throw new Exception();
+						}
+					} catch (Exception ex) {
+						try {
+							// check if this card requires Dark Fusion
+							String isDarkFusion = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Dark Fusion)").first().text();
+							if(!isDarkFusion.equals("Dark Fusion")) {
+								throw new Exception();
+							}
+							related.add(DARK_FUSION_CARD_NAME);
+						} catch (Exception exc) {
+							try {
+								// check if this card requires Mask Change
+								String isMaskCh = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Mask Change)").first().text();
+								if(!isMaskCh.equals("Mask Change")) {
+									throw new Exception();
+								}
+								related.add(MASK_CHANGE_CARD_NAME);
+							} catch (Exception excp) {
+								// if this card is a normal fusion, add polymerization
+								related.add(POLYMERIZATION_CARD_NAME);
+							}
+						}
+					}
 				}
 				else if(types.contains("Synchro")) {
 					isExtraDeck = true;
@@ -68,7 +105,7 @@ public class URLParser {
 				else if(types.contains("Ritual")) {
 					isExtraDeck = false;
 					// get the end of the url of the required ritual spell as a string
-					related = cardtablerow.select("th.cardtablerowheader:matches(Ritual Spell Card) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+					related = cardtablerow.select("th.cardtablerowheader:matches(Ritual Spell Card required) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
 				}
 				else if(types.contains("Xyz")) {
 					isExtraDeck = true;
@@ -79,8 +116,13 @@ public class URLParser {
 				
 				
 				if(related != null) {
-					formatNames(related);
-					System.out.println(related);
+					if(!related.isEmpty()) {
+						formatNames(related);
+						System.out.println(related);
+					}
+				}
+				else {
+					related = new ArrayList<String>();
 				}
 				
 				level = cardtablerow.select("th.cardtablerowheader:matches(Level) + td.cardtablerowdata").text();
@@ -91,7 +133,18 @@ public class URLParser {
 			else { // if the card is a spell or trap,
 				property = cardtablerow.select("th.cardtablerowheader:matches(Property) + td.cardtablerowdata").text();
 				if(color.contentEquals("Spell")) { // if the card is a spell
-					cardToReturn = new Card_Spell(name, color, property, passcode, desc, formattedCardName, image);
+					// get the end of the url of the required ritual spell as a string
+					related = cardtablerow.select("th.cardtablerowheader:matches(Ritual Monster required) + td.cardtablerowdata a[href^=/wiki/]").eachAttr("href");
+					if(related != null) {
+						if(!related.isEmpty()) {
+							formatNames(related);
+							System.out.println(related);
+						}
+					}
+					else {
+						related = new ArrayList<String>();
+					}
+					cardToReturn = new Card_Spell(name, color, property, passcode, desc, formattedCardName, image, related);
 				}
 				else { // if the card is a trap
 					cardToReturn = new Card_Trap(name, color, property, passcode, desc, formattedCardName, image);
