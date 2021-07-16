@@ -1,6 +1,7 @@
 package cards;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Card_Spell extends Card {
@@ -19,7 +20,7 @@ public class Card_Spell extends Card {
 	}
 	
 	public Card_Spell(String name, String color, String property, String passcode, String desc, String frmtdName, Image image){
-		this(name, color, property, passcode, desc, frmtdName, image, null);
+		this(name, color, property, passcode, desc, frmtdName, image, new ArrayList<String>());
 	}
 	
 	@Override

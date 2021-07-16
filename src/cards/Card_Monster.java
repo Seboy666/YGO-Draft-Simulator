@@ -1,6 +1,7 @@
 package cards;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Card_Monster extends Card {
@@ -29,7 +30,7 @@ public class Card_Monster extends Card {
 	
 	public Card_Monster(String name, String color, boolean isExtraDeck, String att, String types, String level,
 			String atk, String def, String passcode, String desc, String frmtdName, Image image) {
-		this(name, color, isExtraDeck, att, types, level, atk, def, passcode, desc, frmtdName, image, null);
+		this(name, color, isExtraDeck, att, types, level, atk, def, passcode, desc, frmtdName, image, new ArrayList<String>());
 	}
 	
 	public String getAttribute() { return attribute; }
