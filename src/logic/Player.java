@@ -41,8 +41,13 @@ public class Player {
 	}
 	
 	public void addCard(Card card) { 
-		cardList.add(card); 
-		listModel.addElement(cardList.size() + " - " + card.getName() + " ");
+		cardList.add(card);
+		if(card.isExtraDeck()) {
+			listModel.addElement(cardList.size() + " - EXTRA - " + card.getName() + " ");
+		}
+		else {
+			listModel.addElement(cardList.size() + " - " + card.getName() + " ");
+		}
 	}
 	
 	public DefaultListModel<String> getListModel() { return listModel; }
