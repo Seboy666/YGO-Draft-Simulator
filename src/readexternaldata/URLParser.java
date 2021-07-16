@@ -1,6 +1,8 @@
 package readexternaldata;
 import java.awt.Image;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -26,6 +28,7 @@ public class URLParser {
 		String def;
 		String passcode;
 		String desc; // the card description / text
+		List<String> related = null;
 		Image image;
 		Card cardToReturn;
 		
@@ -52,16 +55,38 @@ public class URLParser {
 			if(color.contentEquals("Monster")) { // if the card is a monster,
 				attribute = cardtablerow.select("th.cardtablerowheader:matches(Attribute) + td.cardtablerowdata").text();
 				types = cardtablerow.select("th.cardtablerowheader:matches(Type) + td.cardtablerowdata").text();
-				if(types.contains("Fusion") || types.contains("Synchro") || types.contains("Xyz")) {
+				if(types.contains("Fusion")) {
+					isExtraDeck = true;
+					// get the end of the url of fusion materials as strings
+					related = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+				}
+				else if(types.contains("Synchro")) {
+					isExtraDeck = true;
+					// get the end of the url of synchro materials as strings
+					related = cardtablerow.select("th.cardtablerowheader:matches(Synchro Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+				}
+				else if(types.contains("Ritual")) {
+					isExtraDeck = false;
+					// get the end of the url of the required ritual spell as a string
+					related = cardtablerow.select("th.cardtablerowheader:matches(Ritual Spell Card) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+				}
+				else if(types.contains("Xyz")) {
 					isExtraDeck = true;
 				}
 				else {
 					isExtraDeck = false;
 				}
+				
+				
+				if(related != null) {
+					formatNames(related);
+					System.out.println(related);
+				}
+				
 				level = cardtablerow.select("th.cardtablerowheader:matches(Level) + td.cardtablerowdata").text();
 				atk = cardtablerow.select("th.cardtablerowheader:matches(ATK) + td.cardtablerowdata > a").first().text();
 				def = cardtablerow.select("th.cardtablerowheader:matches(DEF) + td.cardtablerowdata > a").get(1).text();
-				cardToReturn = new Card_Monster(name, color, isExtraDeck, attribute, types, level, atk, def, passcode, desc, formattedCardName, image);
+				cardToReturn = new Card_Monster(name, color, isExtraDeck, attribute, types, level, atk, def, passcode, desc, formattedCardName, image, related);
 			}
 			else { // if the card is a spell or trap,
 				property = cardtablerow.select("th.cardtablerowheader:matches(Property) + td.cardtablerowdata").text();
