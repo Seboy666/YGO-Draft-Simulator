@@ -62,40 +62,7 @@ public class URLParser {
 					isExtraDeck = true;
 					// get the end of the url of fusion materials as strings
 					related = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
-					
-					try {
-						// check if this card is a contact fusion
-						List<String> isContact = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Contact Fusion)").eachText();
-						boolean throwExc = true;
-						for (String each : isContact) {
-							if(each.equals("Contact Fusion"))
-								throwExc = false; // if this monster is a contact fusion, we don't want to throw any exception
-						}
-						if(throwExc) {
-							throw new Exception();
-						}
-					} catch (Exception ex) {
-						try {
-							// check if this card requires Dark Fusion
-							String isDarkFusion = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Dark Fusion)").first().text();
-							if(!isDarkFusion.equals("Dark Fusion")) {
-								throw new Exception();
-							}
-							related.add(DARK_FUSION_CARD_NAME);
-						} catch (Exception exc) {
-							try {
-								// check if this card requires Mask Change
-								String isMaskCh = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Mask Change)").first().text();
-								if(!isMaskCh.equals("Mask Change")) {
-									throw new Exception();
-								}
-								related.add(MASK_CHANGE_CARD_NAME);
-							} catch (Exception excp) {
-								// if this card is a normal fusion, add polymerization
-								related.add(POLYMERIZATION_CARD_NAME);
-							}
-						}
-					}
+					determineFusionDetails(cardtablerow, related);
 				}
 				else if(types.contains("Synchro")) {
 					isExtraDeck = true;
@@ -150,13 +117,56 @@ public class URLParser {
 	private static final String APOSTROPHE = "%27";
 	
 	private static void formatNames(List<String> list) {
-		List<String> output = new ArrayList<String>(list);
-		String temp = "";
-		list.clear();
-		for(String each : output) {
-			temp = each.replaceAll(URL_CHUNK, ""); // removes /wiki/ from the formatted card name
-			temp = temp.replaceAll(APOSTROPHE, "'");
-			list.add(temp);
+		if(list != null) {
+			if(!list.isEmpty()) { 
+				List<String> output = new ArrayList<String>(list);
+				String temp = "";
+				list.clear();
+				for(String each : output) {
+					temp = each.replaceAll(URL_CHUNK, ""); // removes /wiki/ from the formatted card name
+					temp = temp.replaceAll(APOSTROPHE, "'");
+					list.add(temp);
+				}
+			}
+		}
+		else {
+			list = new ArrayList<String>();
+		}
+	}
+	
+	private static void determineFusionDetails(Elements cardtablerow, List<String> relatedCardNames) {
+		try {
+			// check if this card is a contact fusion
+			List<String> isContact = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Contact Fusion)").eachText();
+			boolean throwExc = true;
+			for (String each : isContact) {
+				if(each.equals("Contact Fusion")) // check if "Contact Fusion" is present in any of the strings
+					throwExc = false; // if this monster is a contact fusion, we don't want to throw any exception
+			}
+			if(throwExc) {
+				throw new Exception();
+			}
+		} catch (Exception ex) {
+			try {
+				// check if this card requires Dark Fusion
+				String isDarkFusion = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Dark Fusion)").first().text();
+				if(!isDarkFusion.equals("Dark Fusion")) {
+					throw new Exception();
+				}
+				relatedCardNames.add(DARK_FUSION_CARD_NAME);
+			} catch (Exception exc) {
+				try {
+					// check if this card requires Mask Change
+					String isMaskCh = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Mask Change)").first().text();
+					if(!isMaskCh.equals("Mask Change")) {
+						throw new Exception();
+					}
+					relatedCardNames.add(MASK_CHANGE_CARD_NAME);
+				} catch (Exception excp) {
+					// if this card is a normal fusion, add polymerization
+					relatedCardNames.add(POLYMERIZATION_CARD_NAME);
+				}
+			}
 		}
 	}
 	
