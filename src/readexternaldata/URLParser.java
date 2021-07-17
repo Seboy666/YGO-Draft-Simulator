@@ -62,7 +62,7 @@ public class URLParser {
 					isExtraDeck = true;
 					// get the end of the url of fusion materials as strings
 					related = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
-					determineFusionDetails(cardtablerow, related);
+					related = determineFusionDetails(cardtablerow, related);
 				}
 				else if(types.contains("Synchro")) {
 					isExtraDeck = true;
@@ -81,13 +81,13 @@ public class URLParser {
 					isExtraDeck = false;
 				}
 				
-				
 				formatNames(related);
 				
 				level = cardtablerow.select("th.cardtablerowheader:matches(Level) + td.cardtablerowdata").text();
 				atk = cardtablerow.select("th.cardtablerowheader:matches(ATK) + td.cardtablerowdata > a").first().text();
 				def = cardtablerow.select("th.cardtablerowheader:matches(DEF) + td.cardtablerowdata > a").get(1).text();
 				cardToReturn = new Card_Monster(name, color, isExtraDeck, attribute, types, level, atk, def, passcode, desc, formattedCardName, image, related);
+				System.out.println(related);
 			}
 			else { // if the card is a spell or trap,
 				property = cardtablerow.select("th.cardtablerowheader:matches(Property) + td.cardtablerowdata").text();
@@ -134,7 +134,51 @@ public class URLParser {
 		}
 	}
 	
-	private static void determineFusionDetails(Elements cardtablerow, List<String> relatedCardNames) {
+	private static List<String> determineFusionDetails(Elements cardtablerow, List<String> relatedCardNames) {
+		// this try statement adds materials to the relatedCardNames list that need to be present multiple times
+		// this is in case a fusion has multiple materials of the same name
+		try {
+			List<String> specificMaterialNames = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a").eachText();
+			// specificMaterialNames should be the same length as relatedCardNames
+			if(specificMaterialNames.size() != relatedCardNames.size()) {
+				System.out.println("wiki plz");
+			}
+			final int totalSpecificMats_atStart = specificMaterialNames.size();
+			int totalSpecificMats = totalSpecificMats_atStart;
+			int[] amountOfEachSpecificMat = new int[totalSpecificMats_atStart];
+			for(int i = 0; i < amountOfEachSpecificMat.length; i++) {
+				amountOfEachSpecificMat[i] = 0;
+			}
+			
+			String materialsText = cardtablerow.select("th.cardtablerowheader:matches(Materials) + td.cardtablerowdata").text();
+			materialsText = materialsText.replaceAll("\"", ""); // removes quotation marks
+			String[] separatedRawMatNames = materialsText.split(" \\+ "); // splits different materials in different strings
+			
+			for(int j = 0; j < specificMaterialNames.size(); j++) { // among the specific materials, 
+				for(int k = 0; k < separatedRawMatNames.length; k++) {
+					if(specificMaterialNames.get(j).contentEquals(separatedRawMatNames[k])) { // check which ones match the raw names
+						amountOfEachSpecificMat[j]++; // for every match, increase the amount by one
+						totalSpecificMats++;
+					}
+				}
+			}
+			
+			// only run the code when necessary
+			if(totalSpecificMats != totalSpecificMats_atStart) {
+				// will contain all the same cards as relatedCardNames, but with extra copies
+				List<String> relatedCardsWithCopies = new ArrayList<String>(); 
+				for(int position = 0; position < relatedCardNames.size(); position++) {
+					for(int copyNumber = 1; copyNumber <= amountOfEachSpecificMat[position]; copyNumber++) {
+						relatedCardsWithCopies.add(relatedCardNames.get(position));
+					}
+				}
+				relatedCardNames = relatedCardsWithCopies; // replace array
+			}
+		}
+		catch(Exception e) {}
+		
+		// this try statement makes sure to add polymerization only to fusions that require it
+		// as such, contact fusions and mask change fusions should not contain polymerization in their related card names
 		try {
 			// check if this card is a contact fusion
 			List<String> isContact = cardtablerow.select("div.cardtable-categories a[href^=/wiki/]:contains(Contact Fusion)").eachText();
@@ -168,6 +212,7 @@ public class URLParser {
 				}
 			}
 		}
+		return relatedCardNames;
 	}
 	
 }
