@@ -115,15 +115,7 @@ public class URLParser {
 				}
 				
 				
-				if(related != null) {
-					if(!related.isEmpty()) {
-						formatNames(related);
-						System.out.println(related);
-					}
-				}
-				else {
-					related = new ArrayList<String>();
-				}
+				formatNames(related);
 				
 				level = cardtablerow.select("th.cardtablerowheader:matches(Level) + td.cardtablerowdata").text();
 				atk = cardtablerow.select("th.cardtablerowheader:matches(ATK) + td.cardtablerowdata > a").first().text();
@@ -135,15 +127,7 @@ public class URLParser {
 				if(color.contentEquals("Spell")) { // if the card is a spell
 					// get the end of the url of the required ritual spell as a string
 					related = cardtablerow.select("th.cardtablerowheader:matches(Ritual Monster required) + td.cardtablerowdata a[href^=/wiki/]").eachAttr("href");
-					if(related != null) {
-						if(!related.isEmpty()) {
-							formatNames(related);
-							System.out.println(related);
-						}
-					}
-					else {
-						related = new ArrayList<String>();
-					}
+					formatNames(related);
 					cardToReturn = new Card_Spell(name, color, property, passcode, desc, formattedCardName, image, related);
 				}
 				else { // if the card is a trap
