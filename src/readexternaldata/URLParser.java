@@ -139,7 +139,9 @@ public class URLParser {
 		catch(Exception e) {
 			System.out.println(e);
 			image = null;
-			cardToReturn = new Card_Spell("INVALID CARD", "Spell", "OwO", "420", "You should not be seeing this, this is the bad card name : " + formattedCardName, formattedCardName, image);
+			cardToReturn = new Card_Spell("INVALID CARD", "Spell", "OwO", "420",
+					"You should not be seeing this, this is the bad card name : " + formattedCardName,
+					formattedCardName, image);
 			return cardToReturn;
 		}
 	}
