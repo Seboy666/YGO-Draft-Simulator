@@ -20,6 +20,8 @@ public class WeightedRandomBag<T extends Object> {
     private Random rand = new Random();
     private static final double STANDARD_WEIGHT = 1.0d;
     
+    public int size() { return entries.size(); }
+    
     public void recalcTotalWeight() {
     	double tempWeight = 0;
     	for(Entry each : entries) {
