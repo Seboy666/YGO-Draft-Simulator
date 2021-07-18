@@ -1,9 +1,13 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
 import cards.Card;
+import cards.RelatedCard;
 import networking.NetworkServer;
 import readexternaldata.DatabaseReader;
 import readexternaldata.URLParser;
@@ -20,6 +24,7 @@ public class Session_Host extends Session {
 	
 	private DatabaseReader db;
 	private NetworkServer network;
+	private Set<RelatedCard> buffedCards;
 	
 	public Session_Host(boolean withElim, int cards_per_round, int extra_and_rituals_per_round,
 			int spells_traps_per_round, List<Player> playerList, DatabaseReader db, NetworkServer network) {
@@ -33,6 +38,7 @@ public class Session_Host extends Session {
 		this.db = db;
 		this.network = network;
 		this.myPlayerID = 1; // the host is always ID = 1
+		buffedCards = new HashSet<RelatedCard>();
 				
 		startPickPlayerID = new Random().nextInt(playerList.size()); // randomly decide the player that starts
 		startPickPlayerID++; // increment because we want a value from 1 to playerList.size (inclusive)
@@ -63,18 +69,21 @@ public class Session_Host extends Session {
 			formattedCardName = db.getRandomMainDeckCard(withElim);
 			card = URLParser.parseCardNameToCard(formattedCardName);
 			cardList.add(card);
+			removeBuffOnce(card);
 		}
 		
 		for(int j = 0; j < spells_traps_per_round; j++) {
 			formattedCardName = db.getRandomSpellTrapCard(withElim);
 			card = URLParser.parseCardNameToCard(formattedCardName);
 			cardList.add(card);
+			removeBuffOnce(card);
 		}
 		
 		for(int k = 0; k < extra_and_rituals_per_round; k++) {
 			formattedCardName = db.getRandomExtraAndRitualCard(withElim);
 			card = URLParser.parseCardNameToCard(formattedCardName);
 			cardList.add(card);
+			removeBuffOnce(card);
 		}
 	}
 	
@@ -84,11 +93,61 @@ public class Session_Host extends Session {
 	@Override
 	public void addCard(Card card) { cardList.add(card); }
 	
-	@Override
-	public void removeCard(int index) { cardList.remove(index); }
+	/**
+	 * Increases the weight of all cards related to the argument, then adds them to the buffed cards set
+	 * 
+	 * @param card All cards related to this one will be buffed by this method
+	 */
+	private void buffWeightOfRelatedCards(Card card) {
+		Set<RelatedCard> relatedCards = card.getRelatedCardNames();
+		for(RelatedCard rel : relatedCards) {
+			db.buffCardWeight(rel, 20.0d);
+			if(buffedCards.contains(rel)) {
+				rel.incrementNumber(); // if already in the list, increment its number
+			}
+			else {
+				buffedCards.add(rel); // otherwise add it to the list
+			}
+		}
+		
+	}
+	
+	/**
+	 * Removes the card from buffed cards list if it has a number of 1, otherwise
+	 * decrement number.
+	 * 
+	 * @param card The card we want to debuff
+	 */
+	private void removeBuffOnce(Card card) {
+		RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
+		for(RelatedCard each : buffedCards) {
+			if(each.getFormattedName() == card.getFormattedName()) {
+				if(each.decrementNumber()) { // if number is at 0
+					toRemove = each;
+					break;
+				}
+			}
+		}
+		if(toRemove.getFormattedName() != "EMPTY") {
+			buffedCards.remove(toRemove);
+			db.buffCardWeight(toRemove.getFormattedName(), DatabaseReader.DEFAULT_WEIGHT);
+		}
+	}
 	
 	@Override
-	public void removeCard(Card card) { cardList.remove(card); }
+	public void removeCard(int index) {
+		Card card = cardList.get(index);
+		cardList.remove(index);
+		buffWeightOfRelatedCards(card);
+		removeBuffOnce(card);
+	}
+	
+	@Override
+	public void removeCard(Card card) {
+		cardList.remove(card);
+		buffWeightOfRelatedCards(card);
+		removeBuffOnce(card);
+	}
 	
 	@Override
 	public Card getCardAt(int index) { return cardList.get(index); }
