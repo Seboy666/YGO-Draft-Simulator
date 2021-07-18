@@ -255,13 +255,15 @@ public class DraftSessionGUI {
 		JPanel cardDisplayPanel = new JPanel(new BorderLayout());
 		
 		JList<String> playerCardList = new JList<String>(player.getListModel());
+		
 		playerCardList.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				JList<String> thisList = (JList<String>)evt.getSource();
-				int index = thisList.getSelectedIndex();
-				if(index != -1) { // if the list isn't empty
-					updateCardShown(cardDisplayPanel, player.getCardAt(index));
-				}
+			public void mousePressed(MouseEvent evt) {
+				if(playerCardList.getSelectedIndex() != -1) // if the list isn't empty
+					updateCardShown(cardDisplayPanel, player.getCardAt(playerCardList.getSelectedIndex()));
+			}
+			public void mouseReleased(MouseEvent evt) {
+				if(playerCardList.getSelectedIndex() != -1)  // if the list isn't empty
+					updateCardShown(cardDisplayPanel, player.getCardAt(playerCardList.getSelectedIndex()));
 			}
 		});
 		
