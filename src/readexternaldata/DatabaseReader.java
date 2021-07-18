@@ -217,21 +217,6 @@ public class DatabaseReader {
 	}
 	
 	/**
-	 * Fills the weighted bag with formatted card names that match the given color.
-	 * All elements will be given the default weight.
-	 * 
-	 * @param color The card color with which we want the bag to be filled.
-	 * @param bag   The bag we want to fill.
-	 */
-	private void makeWeightedBagOfThisColor(String color, WeightedRandomBag<String> bag) {
-		for(String[] each : namesAndColorsDB) {
-			if(each[1].equals(color)) {
-				bag.addEntry(each[0], DEFAULT_WEIGHT);
-			}
-		}
-	}
-	
-	/**
 	 * Makes a list containing Fusion, Synchro and Xyz, as well as a bag containing
 	 * Fusion, Synchro, Xyz and Rituals.
 	 */
