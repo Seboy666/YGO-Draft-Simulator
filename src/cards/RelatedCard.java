@@ -30,21 +30,24 @@ public class RelatedCard {
 	public String getName() { return name; }
 	public int getNumber() { return number; }
 	public String getCategory() { return category; }
-	
+	public void setCategoryToMonster() { category = "Monster"; }
+	public void setCategoryToSpell() { category = "Spell"; }
+	public void setCategoryToExtra() { category = "Extra"; }
+	public void setCategoryToRitual() { category = "Ritual"; }
 	
 	/**
 	 * Decreases number by one, turns negative values into 0;
 	 * 
-	 * @return FALSE when the number is equal to 0.
+	 * @return TRUE when the number is equal to 0.
 	 */
 	public boolean decrementNumber() {
 		number--;
 		if(number > 0) {
-			return true;
+			return false;
 		}
 		else {
 			number = 0;
-			return false;
+			return true;
 		}
 	}
 	
