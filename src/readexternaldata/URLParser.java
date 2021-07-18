@@ -94,20 +94,23 @@ public class URLParser {
 					isExtraDeck = false;
 				}
 				
-				
-				
 				level = cardtablerow.select("th.cardtablerowheader:matches(Level) + td.cardtablerowdata").text();
 				atk = cardtablerow.select("th.cardtablerowheader:matches(ATK) + td.cardtablerowdata > a").first().text();
 				def = cardtablerow.select("th.cardtablerowheader:matches(DEF) + td.cardtablerowdata > a").get(1).text();
 				cardToReturn = new Card_Monster(name, color, isExtraDeck, attribute, types, level, atk, def, passcode, desc, formattedCardName, image, relatedCards);
-				System.out.println(related_formatted);
 			}
 			else { // if the card is a spell or trap,
 				property = cardtablerow.select("th.cardtablerowheader:matches(Property) + td.cardtablerowdata").text();
 				if(color.contentEquals("Spell")) { // if the card is a spell
-					// get the end of the url of the required ritual spell as a string
-					related_formatted = cardtablerow.select("th.cardtablerowheader:matches(Ritual Monster required) + td.cardtablerowdata a[href^=/wiki/]").eachAttr("href");
-					formatNames(related_formatted);
+					if(property.contentEquals("Ritual")) {
+						// get the end of the url of the required ritual spell as a string
+						related_formatted = cardtablerow.select("th.cardtablerowheader:matches(Ritual Monster required) + td.cardtablerowdata a[href^=/wiki/]").eachAttr("href");
+						formatNames(related_formatted);
+						for(String each : related_formatted) {
+							relatedCards.add(new RelatedCard("", each, "Ritual"));
+						}
+					}
+					
 					cardToReturn = new Card_Spell(name, color, property, passcode, desc, formattedCardName, image, relatedCards);
 				}
 				else { // if the card is a trap
