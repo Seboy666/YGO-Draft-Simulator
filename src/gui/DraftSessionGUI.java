@@ -15,6 +15,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import cards.*;
 import logic.*;
+import net.miginfocom.swing.MigLayout;
 import networking.*;
 
 public class DraftSessionGUI {
@@ -40,6 +41,9 @@ public class DraftSessionGUI {
 	
 	public Session getSession() { return mySession; }
 	
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public void createMainWindow() {
 		
 		floatingCardFrame = new JFrame("Card info"); // a window that appears when clicking "info" on a drafted card panel
@@ -60,15 +64,14 @@ public class DraftSessionGUI {
 		frame.setSize(800, 600);
 		frame.setMinimumSize(new Dimension(400, 300));
 		
-		JPanel windowPanel = new JPanel();
-		windowPanel.setLayout(new BorderLayout(0, 0));
-		frame.setContentPane(windowPanel);
+		frame.setContentPane(new JPanel(new BorderLayout(0, 0)));
+		JMenuBar menuBar = new JMenuBar();
+		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
 		
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(1, 2, 0, 0));
-		windowPanel.add(mainPanel);
+		JPanel mainPanel = new JPanel(new MigLayout("", "[grow 150,fill][shrink,fill]", "[grow,fill]"));
+		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
-		mainPanel.add(cardListPanel);
+		mainPanel.add(cardListPanel, "cell 0 0,alignx center");
 		
 		int numOfColumnsForDraftedCards;
 		if(mySession.getCardsPerRound() % NUM_OF_ROWS_FOR_LEFT_PANEL == 0) {
@@ -81,15 +84,12 @@ public class DraftSessionGUI {
 		populateLeftCardPanel(cardListPanel);
 		
 		JPanel allPlayersDeckPanel = new JPanel();
-		mainPanel.add(allPlayersDeckPanel);
+		mainPanel.add(allPlayersDeckPanel, "cell 1 0,alignx right");
 		allPlayersDeckPanel.setLayout(new GridLayout(1, mySession.getTotalPlayers(), 0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		populatePlayerTabs(tabbedPane);
 		allPlayersDeckPanel.add(tabbedPane);
-		
-		JMenuBar menuBar = new JMenuBar();
-		windowPanel.add(menuBar, BorderLayout.NORTH);
 		
 		JMenu menuSettings = new JMenu("Settings");
 		JMenuItem refreshMnItem = new JMenuItem("Refresh");
