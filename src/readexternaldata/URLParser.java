@@ -2,7 +2,9 @@ package readexternaldata;
 import java.awt.Image;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -31,7 +33,9 @@ public class URLParser {
 		String def;
 		String passcode;
 		String desc; // the card description / text
+		List<String> related_formatted = new ArrayList<String>();
 		List<String> related = new ArrayList<String>();
+		Set<RelatedCard> relatedCards = new HashSet<RelatedCard>();
 		Image image;
 		Card cardToReturn;
 		
@@ -61,18 +65,27 @@ public class URLParser {
 				if(types.contains("Fusion")) {
 					isExtraDeck = true;
 					// get the end of the url of fusion materials as strings
-					related = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
-					related = determineFusionDetails(cardtablerow, related);
+					related_formatted = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+					formatNames(related_formatted);
+					relatedCards = determineFusionDetails(cardtablerow, related_formatted);
 				}
 				else if(types.contains("Synchro")) {
 					isExtraDeck = true;
 					// get the end of the url of synchro materials as strings
-					related = cardtablerow.select("th.cardtablerowheader:matches(Synchro Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+					related_formatted = cardtablerow.select("th.cardtablerowheader:matches(Synchro Material) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+					formatNames(related_formatted);
+					for(String each : related_formatted) {
+						relatedCards.add(new RelatedCard("", each, "Monster"));
+					}
 				}
 				else if(types.contains("Ritual")) {
 					isExtraDeck = false;
 					// get the end of the url of the required ritual spell as a string
-					related = cardtablerow.select("th.cardtablerowheader:matches(Ritual Spell Card required) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+					related_formatted = cardtablerow.select("th.cardtablerowheader:matches(Ritual Spell Card required) + td.cardtablerowdata > a[href^=/wiki/]").eachAttr("href");
+					formatNames(related_formatted);
+					for(String each : related_formatted) {
+						relatedCards.add(new RelatedCard("", each, "Ritual"));
+					}
 				}
 				else if(types.contains("Xyz")) {
 					isExtraDeck = true;
@@ -81,21 +94,21 @@ public class URLParser {
 					isExtraDeck = false;
 				}
 				
-				formatNames(related);
+				
 				
 				level = cardtablerow.select("th.cardtablerowheader:matches(Level) + td.cardtablerowdata").text();
 				atk = cardtablerow.select("th.cardtablerowheader:matches(ATK) + td.cardtablerowdata > a").first().text();
 				def = cardtablerow.select("th.cardtablerowheader:matches(DEF) + td.cardtablerowdata > a").get(1).text();
-				cardToReturn = new Card_Monster(name, color, isExtraDeck, attribute, types, level, atk, def, passcode, desc, formattedCardName, image, related);
-				System.out.println(related);
+				cardToReturn = new Card_Monster(name, color, isExtraDeck, attribute, types, level, atk, def, passcode, desc, formattedCardName, image, relatedCards);
+				System.out.println(related_formatted);
 			}
 			else { // if the card is a spell or trap,
 				property = cardtablerow.select("th.cardtablerowheader:matches(Property) + td.cardtablerowdata").text();
 				if(color.contentEquals("Spell")) { // if the card is a spell
 					// get the end of the url of the required ritual spell as a string
-					related = cardtablerow.select("th.cardtablerowheader:matches(Ritual Monster required) + td.cardtablerowdata a[href^=/wiki/]").eachAttr("href");
-					formatNames(related);
-					cardToReturn = new Card_Spell(name, color, property, passcode, desc, formattedCardName, image, related);
+					related_formatted = cardtablerow.select("th.cardtablerowheader:matches(Ritual Monster required) + td.cardtablerowdata a[href^=/wiki/]").eachAttr("href");
+					formatNames(related_formatted);
+					cardToReturn = new Card_Spell(name, color, property, passcode, desc, formattedCardName, image, relatedCards);
 				}
 				else { // if the card is a trap
 					cardToReturn = new Card_Trap(name, color, property, passcode, desc, formattedCardName, image);
@@ -134,24 +147,54 @@ public class URLParser {
 		}
 	}
 	
-	private static List<String> determineFusionDetails(Elements cardtablerow, List<String> relatedCardNames) {
+	private static Set<RelatedCard> determineFusionDetails(Elements cardtablerow, List<String> relatedFormattedNames) {
+		
+		Set<RelatedCard> relatedCards = new HashSet<RelatedCard>();
+		
 		// this try statement adds materials to the relatedCardNames list that need to be present multiple times
 		// this is in case a fusion has multiple materials of the same name
 		try {
 			List<String> specificMaterialNames = cardtablerow.select("th.cardtablerowheader:matches(Fusion Material) + td.cardtablerowdata > a").eachText();
-			// specificMaterialNames should be the same length as relatedCardNames
-			if(specificMaterialNames.size() != relatedCardNames.size()) {
+			// specificMaterialNames should be the same length as relatedFormattedNames
+			if(specificMaterialNames.size() != relatedFormattedNames.size()) {
 				System.out.println("wiki plz");
 			}
+			
+			
+			
+			
+			
+			for(int i = 0; i < specificMaterialNames.size(); i++) {
+				String name = specificMaterialNames.get(i);
+				String formattedName = relatedFormattedNames.get(i);
+				relatedCards.add(new RelatedCard(name, formattedName, 0, "Monster"));
+			}
+			
+			
+			
+			
+			/*
 			final int totalSpecificMats_atStart = specificMaterialNames.size();
 			int totalSpecificMats = totalSpecificMats_atStart;
 			int[] amountOfEachSpecificMat = new int[totalSpecificMats_atStart];
 			for(int i = 0; i < amountOfEachSpecificMat.length; i++) {
 				amountOfEachSpecificMat[i] = 0;
-			}
+			}*/
 			
 			String materialsText = cardtablerow.select("th.cardtablerowheader:matches(Materials) + td.cardtablerowdata").text();
-			materialsText = materialsText.replaceAll("\"", ""); // removes quotation marks
+			
+			
+			
+			for(RelatedCard each : relatedCards) {
+				while(materialsText.contains(each.getName())) {
+					materialsText = materialsText.replaceFirst(each.getName(), "");
+					each.incrementNumber();
+				}
+			}
+			
+			
+			/*
+			materialsText = materialsText.replace("\"", ""); // removes quotation marks
 			String[] separatedRawMatNames = materialsText.split(" \\+ "); // splits different materials in different strings
 			
 			for(int j = 0; j < specificMaterialNames.size(); j++) { // among the specific materials, 
@@ -167,13 +210,13 @@ public class URLParser {
 			if(totalSpecificMats != totalSpecificMats_atStart) {
 				// will contain all the same cards as relatedCardNames, but with extra copies
 				List<String> relatedCardsWithCopies = new ArrayList<String>(); 
-				for(int position = 0; position < relatedCardNames.size(); position++) {
+				for(int position = 0; position < relatedFormattedNames.size(); position++) {
 					for(int copyNumber = 1; copyNumber <= amountOfEachSpecificMat[position]; copyNumber++) {
-						relatedCardsWithCopies.add(relatedCardNames.get(position));
+						relatedCardsWithCopies.add(relatedFormattedNames.get(position));
 					}
 				}
-				relatedCardNames = relatedCardsWithCopies; // replace array
-			}
+				relatedFormattedNames = relatedCardsWithCopies; // replace array
+			}*/
 		}
 		catch(Exception e) {}
 		
@@ -197,7 +240,8 @@ public class URLParser {
 				if(!isDarkFusion.equals("Dark Fusion")) {
 					throw new Exception();
 				}
-				relatedCardNames.add(DARK_FUSION_CARD_NAME);
+				relatedCards.add(new RelatedCard(DARK_FUSION_CARD_NAME, "Dark_Fusion", 1, "Spell"));
+				//relatedFormattedNames.add(DARK_FUSION_CARD_NAME);
 			} catch (Exception exc) {
 				try {
 					// check if this card requires Mask Change
@@ -205,14 +249,16 @@ public class URLParser {
 					if(!isMaskCh.equals("Mask Change")) {
 						throw new Exception();
 					}
-					relatedCardNames.add(MASK_CHANGE_CARD_NAME);
+					relatedCards.add(new RelatedCard(MASK_CHANGE_CARD_NAME, "Mask_Change", 1, "Spell"));
+					//relatedFormattedNames.add(MASK_CHANGE_CARD_NAME);
 				} catch (Exception excp) {
 					// if this card is a normal fusion, add polymerization
-					relatedCardNames.add(POLYMERIZATION_CARD_NAME);
+					relatedCards.add(new RelatedCard(POLYMERIZATION_CARD_NAME, POLYMERIZATION_CARD_NAME, 1, "Spell"));
+					//relatedFormattedNames.add(POLYMERIZATION_CARD_NAME);
 				}
 			}
 		}
-		return relatedCardNames;
+		return relatedCards;
 	}
 	
 }
