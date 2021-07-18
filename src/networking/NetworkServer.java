@@ -139,7 +139,7 @@ public class NetworkServer extends NetworkHandler {
 					}
 				}
 				synchronized (theConsole) {
-					theConsole.append(thisPlayer.getUsername() + " connected with ID #" + thisPlayer.getID());
+					theConsole.append(thisPlayer.getUsername() + " connected with ID #" + thisPlayer.getID() + "\n");
 				}
 				clientSet.add(thisClient);
 			}
