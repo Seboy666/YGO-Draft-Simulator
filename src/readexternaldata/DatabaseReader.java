@@ -26,7 +26,7 @@ public class DatabaseReader {
 	private WeightedRandomBag<String> mainDeckCards; // spell, traps and monsters, NO RITUALS
 	private WeightedRandomBag<String> spellAndTrapCards; // just spell and traps
 	
-	private static final double DEFAULT_WEIGHT = 1.0d;
+	public static final double DEFAULT_WEIGHT = 1.0d;
 	private static final String STR_FUSION = "Fusion";
 	private static final String STR_MONSTER = "Monster";
 	private static final String STR_RITUAL = "Ritual";
@@ -39,7 +39,7 @@ public class DatabaseReader {
 	public DatabaseReader() {
 		namesAndColorsDB = makeDatabaseFromTxt(); // create entire DB
 		
-		this.cardNames = new WeightedRandomBag<String>(); // initialize all member variables
+		this.cardNames = new WeightedRandomBag<String>(); // initialize all bags
 		this.fusionCards = new WeightedRandomBag<String>();
 		this.monsterCards = new WeightedRandomBag<String>();
 		this.ritualCards = new WeightedRandomBag<String>();
@@ -126,9 +126,20 @@ public class DatabaseReader {
 	 * @param percent The minimum percent chance that we pull the card once during a round.
 	 */
 	public void buffCardWeight(RelatedCard relatedCard, double percent) {
-		double relativeWeight;
+		double relativeWeight = 1;
 		if(relatedCard.getCategory() == "Monster") {
 			relativeWeight = (mainDeckCards.size() / 100) * percent;
+			
+			// this makes sure the card is of the correct category
+			for(String[] each : namesAndColorsDB) {
+				if(relatedCard.getFormattedName() == each[0]) { // once the matching name is found
+					if(each[1] == "Fusion" || each[1] == "Synchro" || each[1] == "Xyz") { // check it's color
+						relatedCard.setCategoryToExtra();
+					}
+					relativeWeight = (extraDeckAndRitualCards.size() / 100) * percent;
+					break;
+				}
+			}
 		}
 		else if(relatedCard.getCategory() == "Spell") {
 			relativeWeight = (spellAndTrapCards.size() / 100) * percent;
