@@ -31,18 +31,11 @@ public class DraftSessionGUI {
 	
 	private static final String NOW_PICKING_STR = "Now picking: ";
 	
-	/**
-	 * When set to false, buttons will not respond to clicks. Used to avoid
-	 * undesired behavior.
-	 */
-	private boolean allowClick;
-	
 	public DraftSessionGUI(Session session) {
 		mySession = session;
 		this.cardListPanel = new JPanel();
 		this.menuInfo = new JMenu("Info");
 		this.menuPickingPlayerName = new JMenu(NOW_PICKING_STR + mySession.getPickingPlayer().getUsername());
-		allowClick = true;
 	}
 	
 	public Session getSession() { return mySession; }
