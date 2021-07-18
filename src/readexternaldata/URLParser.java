@@ -34,7 +34,6 @@ public class URLParser {
 		String passcode;
 		String desc; // the card description / text
 		List<String> related_formatted = new ArrayList<String>();
-		List<String> related = new ArrayList<String>();
 		Set<RelatedCard> relatedCards = new HashSet<RelatedCard>();
 		Image image;
 		Card cardToReturn;
