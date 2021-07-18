@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import cards.RelatedCard;
 import logic.WeightedRandomBag;
 
 public class DatabaseReader {
@@ -111,6 +113,31 @@ public class DatabaseReader {
 	 */
 	public void buffCardWeight(String formattedCardName, double newWeight) {
 		cardNames.modifyWeight(formattedCardName, newWeight);
+		
+		mainDeckCards.recalcTotalWeight();
+		spellAndTrapCards.recalcTotalWeight();
+		extraDeckAndRitualCards.recalcTotalWeight();
+	}
+	
+	/**
+	 * Safely changes the weight of the card so it has a % chance to be pulled.
+	 * 
+	 * @param relatedCard The card we want to buff.
+	 * @param percent The minimum percent chance that we pull the card once during a round.
+	 */
+	public void buffCardWeight(RelatedCard relatedCard, double percent) {
+		double relativeWeight;
+		if(relatedCard.getCategory() == "Monster") {
+			relativeWeight = (mainDeckCards.size() / 100) * percent;
+		}
+		else if(relatedCard.getCategory() == "Spell") {
+			relativeWeight = (spellAndTrapCards.size() / 100) * percent;
+		}
+		else { // ritual or extra
+			relativeWeight = (extraDeckAndRitualCards.size() / 100) * percent;
+		}
+		
+		cardNames.modifyWeight(relatedCard.getFormattedName(), relativeWeight);
 		
 		mainDeckCards.recalcTotalWeight();
 		spellAndTrapCards.recalcTotalWeight();
