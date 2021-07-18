@@ -1,13 +1,13 @@
 package cards;
 
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Card_Spell extends Card {
 	private String property; // quick-play, field, equip, etc
 	
-	public Card_Spell(String name, String color, String property, String passcode, String desc, String frmtdName, Image image, List<String> related){
+	public Card_Spell(String name, String color, String property, String passcode, String desc, String frmtdName, Image image, Set<RelatedCard> related){
 		this.name = name;
 		this.color = color;
 		this.isExtraDeck = false;
@@ -20,7 +20,7 @@ public class Card_Spell extends Card {
 	}
 	
 	public Card_Spell(String name, String color, String property, String passcode, String desc, String frmtdName, Image image){
-		this(name, color, property, passcode, desc, frmtdName, image, new ArrayList<String>());
+		this(name, color, property, passcode, desc, frmtdName, image, new HashSet<RelatedCard>());
 	}
 	
 	@Override

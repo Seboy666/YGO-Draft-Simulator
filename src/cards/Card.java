@@ -1,7 +1,7 @@
 package cards;
 
 import java.awt.Image;
-import java.util.List;
+import java.util.Set;
 
 public abstract class Card {
 	protected String name;
@@ -10,7 +10,7 @@ public abstract class Card {
 	protected String passcode; // the unique number associated with the card, used for deckbuilding in YGO pro
 	protected String desc; // the card description / effect / flavor text
 	protected Image cardImage;
-	protected List<String> related;
+	protected Set<RelatedCard> related;
 	
 	/**
 	 * The formatted name is the string needed to complete this card's url
@@ -34,9 +34,9 @@ public abstract class Card {
 	 * Gives all formatted card names related to this one. Used to increase those cards'
 	 * probability of being pulled.
 	 * 
-	 * @return A list of all related cards, as formatted card names.
+	 * @return A set of all related cards, as RelatedCard objects
 	 */
-	public List<String> getRelatedCardNames() { return related; }
+	public Set<RelatedCard> getRelatedCardNames() { return related; }
 	
 	public abstract String getOneLineInfo();
 	

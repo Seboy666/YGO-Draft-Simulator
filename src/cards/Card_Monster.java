@@ -1,8 +1,8 @@
 package cards;
 
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Card_Monster extends Card {
 	private String attribute; // light, dark, fire, etc.
@@ -12,7 +12,7 @@ public class Card_Monster extends Card {
 	private String def;
 	
 	public Card_Monster(String name, String color, boolean isExtraDeck, String att, String types, String level,
-			String atk, String def, String passcode, String desc, String frmtdName, Image image, List<String> related) {
+			String atk, String def, String passcode, String desc, String frmtdName, Image image, Set<RelatedCard> related) {
 		this.name = name;
 		this.color = color;
 		this.isExtraDeck = isExtraDeck;
@@ -30,7 +30,7 @@ public class Card_Monster extends Card {
 	
 	public Card_Monster(String name, String color, boolean isExtraDeck, String att, String types, String level,
 			String atk, String def, String passcode, String desc, String frmtdName, Image image) {
-		this(name, color, isExtraDeck, att, types, level, atk, def, passcode, desc, frmtdName, image, new ArrayList<String>());
+		this(name, color, isExtraDeck, att, types, level, atk, def, passcode, desc, frmtdName, image, new HashSet<RelatedCard>());
 	}
 	
 	public String getAttribute() { return attribute; }
