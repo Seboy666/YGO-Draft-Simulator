@@ -43,7 +43,7 @@ public class URLParser {
 		try {
 			doc = Jsoup.connect(WIKI_URL_START + formattedCardName).get();
 			Elements cardtablerow = doc.getElementsByClass("cardtablerow");
-			name = cardtablerow.select("th.cardtablerowheader:matches(English) + td.cardtablerowdata").text(); // get the card name
+			name = cardtablerow.select("th.cardtablerowheader:matches(English) + td.cardtablerowdata").first().text(); // get the card name
 			color = cardtablerow.select("th.cardtablerowheader:matches(Card type) + td.cardtablerowdata").text(); // if the card is a spell / trap / monster
 			passcode = cardtablerow.select("th.cardtablerowheader:matches(Passcode) + td.cardtablerowdata").text(); // get the card unique ID / passcode
 			desc = doc.getElementsByClass("navbox-list").eachText().get(0); // get card description in english
