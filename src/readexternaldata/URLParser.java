@@ -130,6 +130,7 @@ public class URLParser {
 	
 	private static final String URL_CHUNK = "/wiki/";
 	private static final String APOSTROPHE = "%27";
+	private static final String ALPHA = "%CE%B1";
 	
 	private static void formatNames(List<String> list) {
 		if(list != null) {
@@ -140,6 +141,7 @@ public class URLParser {
 				for(String each : output) {
 					temp = each.replaceAll(URL_CHUNK, ""); // removes /wiki/ from the formatted card name
 					temp = temp.replaceAll(APOSTROPHE, "'");
+					temp = temp.replaceAll(ALPHA, "α");
 					list.add(temp);
 				}
 			}
