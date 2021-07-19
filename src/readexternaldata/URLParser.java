@@ -172,8 +172,6 @@ public class URLParser {
 			
 			String materialsText = cardtablerow.select("th.cardtablerowheader:matches(Materials) + td.cardtablerowdata").text();
 			
-			
-			
 			for(RelatedCard each : relatedCards) {
 				while(materialsText.contains(each.getName())) {
 					materialsText = materialsText.replaceFirst(each.getName(), "");
@@ -204,7 +202,6 @@ public class URLParser {
 					throw new Exception();
 				}
 				relatedCards.add(new RelatedCard(DARK_FUSION_CARD_NAME, "Dark_Fusion", 1, "Spell"));
-				//relatedFormattedNames.add(DARK_FUSION_CARD_NAME);
 			} catch (Exception exc) {
 				try {
 					// check if this card requires Mask Change
@@ -213,11 +210,9 @@ public class URLParser {
 						throw new Exception();
 					}
 					relatedCards.add(new RelatedCard(MASK_CHANGE_CARD_NAME, "Mask_Change", 1, "Spell"));
-					//relatedFormattedNames.add(MASK_CHANGE_CARD_NAME);
 				} catch (Exception excp) {
 					// if this card is a normal fusion, add polymerization
 					relatedCards.add(new RelatedCard(POLYMERIZATION_CARD_NAME, POLYMERIZATION_CARD_NAME, 1, "Spell"));
-					//relatedFormattedNames.add(POLYMERIZATION_CARD_NAME);
 				}
 			}
 		}
