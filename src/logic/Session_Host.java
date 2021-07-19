@@ -132,17 +132,13 @@ public class Session_Host extends Session {
 	 * @param card All cards related to this one will be buffed by this method
 	 */
 	private void buffWeightOfRelatedCards(Card card) {
-		for(RelatedCard each : buffedCards) { // check if this card is currently buffed
-			if(each.getFormattedName().contentEquals(card.getFormattedName()))
-				return; // if it is currently buffed, do not buff its related cards
-		} // this is so we eliminate potential loops keeping certain cards periodically buffed
-		
 		Set<RelatedCard> relatedCards = card.getRelatedCardNames();
 		for(RelatedCard rel : relatedCards) {
 			if(rel.getFormattedName().contentEquals("Polymerzation")) 
 				buffFusionSupportCards();
 			
 			db.buffCardWeight(rel, DEFAULT_BUFF_PERCENT);
+			
 			if(!buffedCards.contains(rel)) 
 				buffedCards.add(rel); // if not in the list, add it to the list
 		}
