@@ -121,8 +121,9 @@ public class Session_Host extends Session {
 	private void removeBuffOnce(Card card) {
 		RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
 		for(RelatedCard each : buffedCards) {
-			if(each.getFormattedName() == card.getFormattedName()) {
-				if(each.decrementNumber()) { // if number is at 0
+			if(each.getFormattedName().contentEquals(card.getFormattedName())) {
+				each.decrementNumber();
+				if(each.getNumber() == 0) { // if number is at 0
 					toRemove = each;
 					break;
 				}
@@ -139,14 +140,12 @@ public class Session_Host extends Session {
 		Card card = cardList.get(index);
 		cardList.remove(index);
 		buffWeightOfRelatedCards(card);
-		removeBuffOnce(card);
 	}
 	
 	@Override
 	public void removeCard(Card card) {
 		cardList.remove(card);
 		buffWeightOfRelatedCards(card);
-		removeBuffOnce(card);
 	}
 	
 	@Override
