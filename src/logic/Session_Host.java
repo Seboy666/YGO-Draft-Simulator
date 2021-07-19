@@ -145,7 +145,7 @@ public class Session_Host extends Session {
 						toRemove = each;
 					}
 				}
-				if(toRemove.getFormattedName() != "EMPTY") 
+				if(!toRemove.getFormattedName().contentEquals("EMPTY")) 
 					unbuffableCards.remove(toRemove); // make it buffable next time
 			}
 			else {
@@ -187,7 +187,7 @@ public class Session_Host extends Session {
 				}
 			}
 		}
-		if(toRemove.getFormattedName() != "EMPTY") {
+		if(!toRemove.getFormattedName().contentEquals("EMPTY")) {
 			buffedCards.remove(toRemove);
 			db.buffCardWeight(toRemove.getFormattedName(), DatabaseReader.DEFAULT_WEIGHT); // reset weight
 		}
