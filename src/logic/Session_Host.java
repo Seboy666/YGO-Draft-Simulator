@@ -27,6 +27,7 @@ public class Session_Host extends Session {
 	private Set<RelatedCard> buffedCards;
 	
 	private static final double DEFAULT_BUFF_PERCENT = 20.0d;
+	private static final double FLAT_BUFF_WEIGHT_FUSION_SUPPORT = 7.0d;
 	
 	public Session_Host(boolean withElim, int cards_per_round, int extra_and_rituals_per_round,
 			int spells_traps_per_round, List<Player> playerList, DatabaseReader db, NetworkServer network) {
@@ -96,20 +97,54 @@ public class Session_Host extends Session {
 	public void addCard(Card card) { cardList.add(card); }
 	
 	/**
-	 * Increases the weight of all cards related to the argument, then adds them to the buffed cards set
+	 * Gives some fusion support cards a small buff, all at once.
+	 */
+	private void buffFusionSupportCards() {
+		Set<RelatedCard> fusionSupportCards = new HashSet<RelatedCard>(); // TODO: does this really have to be coded this way?
+		fusionSupportCards.add(new RelatedCard("Fusion Gate", "Fusion_Gate", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Power Bond", "Power_Bond", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Overload Fusion", "Overload_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Dragon's Mirror", "Dragon's_Mirror", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Fusion Recovery", "Fusion_Recovery", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Parallel World Fusion", "Parallel_World_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Fusion Sage", "Fusion_Sage", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Future Fusion", "Future_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Gem-Knight Fusion", "Gem-Knight_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Instant Fusion", "Instant_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Miracle Fusion", "Miracle_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Miracle Synchro_Fusion", "Miracle_Synchro_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Revoke Fusion", "Revoke_Fusion", 1, "Spell"));
+		fusionSupportCards.add(new RelatedCard("Super Polymerization", "Super_Polymerization", 1, "Spell"));
+		
+		for(RelatedCard each : fusionSupportCards) {
+			if(!buffedCards.contains(each)) {
+				buffedCards.add(each);
+				db.buffCardWeight(each.getFormattedName(), FLAT_BUFF_WEIGHT_FUSION_SUPPORT);
+			}
+		}
+		
+	}
+	
+	/**
+	 * If the card is not buffed, increase the weight of all cards related to it,
+	 * then add them to the buffed cards set
 	 * 
 	 * @param card All cards related to this one will be buffed by this method
 	 */
 	private void buffWeightOfRelatedCards(Card card) {
+		for(RelatedCard each : buffedCards) { // check if this card is currently buffed
+			if(each.getFormattedName().contentEquals(card.getFormattedName()))
+				return; // if it is currently buffed, do not buff its related cards
+		} // this is so we eliminate potential loops keeping certain cards periodically buffed
+		
 		Set<RelatedCard> relatedCards = card.getRelatedCardNames();
 		for(RelatedCard rel : relatedCards) {
+			if(rel.getFormattedName().contentEquals("Polymerzation")) 
+				buffFusionSupportCards();
+			
 			db.buffCardWeight(rel, DEFAULT_BUFF_PERCENT);
-			if(buffedCards.contains(rel)) {
-				rel.incrementNumber(); // if already in the list, increment its number
-			}
-			else {
-				buffedCards.add(rel); // otherwise add it to the list
-			}
+			if(!buffedCards.contains(rel)) 
+				buffedCards.add(rel); // if not in the list, add it to the list
 		}
 		
 	}
@@ -133,7 +168,7 @@ public class Session_Host extends Session {
 		}
 		if(toRemove.getFormattedName() != "EMPTY") {
 			buffedCards.remove(toRemove);
-			db.buffCardWeight(toRemove.getFormattedName(), DatabaseReader.DEFAULT_WEIGHT);
+			db.buffCardWeight(toRemove.getFormattedName(), DatabaseReader.DEFAULT_WEIGHT); // reset weight
 		}
 	}
 	
