@@ -166,7 +166,7 @@ public class DraftSessionGUI {
 		nameAndDescPanel.add(descScrollPane, BorderLayout.CENTER);
 		cardPanel.add(nameAndDescPanel, BorderLayout.CENTER);
 		
-		JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 2, 2));
+		JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 1, 1));
 		JButton btnPick = new JButton("Pick");
 		btnPick.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { 
