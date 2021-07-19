@@ -138,12 +138,32 @@ public class Session_Host extends Session {
 			if(rel.getFormattedName().contentEquals("Polymerzation")) 
 				buffFusionSupportCards();
 			
-			db.buffCardWeight(rel, DEFAULT_BUFF_PERCENT);
-			
-			if(!buffedCards.contains(rel)) 
-				buffedCards.add(rel); // if not in the list, add it to the list
+			if(isUnbuffable(rel.getFormattedName())) { // if the card is unbuffable...
+				RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
+				for(RelatedCard each : unbuffableCards) {
+					if(each.getFormattedName().contentEquals(rel.getFormattedName())) {
+						toRemove = each;
+					}
+				}
+				if(toRemove.getFormattedName() != "EMPTY") 
+					unbuffableCards.remove(toRemove); // make it buffable next time
+			}
+			else {
+				db.buffCardWeight(rel, DEFAULT_BUFF_PERCENT);
+				
+				if(!buffedCards.contains(rel)) 
+					buffedCards.add(rel); // if not in the list, add it to the list
+			}
 		}
-		
+	}
+	
+	private boolean isUnbuffable(String formattedName) {
+		for (RelatedCard each : unbuffableCards) {
+			if(each.getFormattedName().contentEquals(formattedName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -153,6 +173,10 @@ public class Session_Host extends Session {
 	 * @param card The card we want to debuff
 	 */
 	private void removeBuffOnce(Card card) {
+		if(!card.getRelatedCardNames().isEmpty()) { // if it has related cards, stop it from being buffed again
+			unbuffableCards.add(new RelatedCard(card.getName(), card.getFormattedName(), 1, card.getColor()));
+		}
+		
 		RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
 		for(RelatedCard each : buffedCards) {
 			if(each.getFormattedName().contentEquals(card.getFormattedName())) {
