@@ -43,6 +43,7 @@ public class Session_Host extends Session {
 		this.network = network;
 		this.myPlayerID = 1; // the host is always ID = 1
 		buffedCards = new HashSet<RelatedCard>();
+		unbuffableCards = new HashSet<RelatedCard>();
 				
 		startPickPlayerID = new Random().nextInt(playerList.size()); // randomly decide the player that starts
 		startPickPlayerID++; // increment because we want a value from 1 to playerList.size (inclusive)
