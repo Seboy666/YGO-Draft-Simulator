@@ -42,6 +42,8 @@ public class HostGameGUI {
 	private static final int MAX_CARDS_PER_DRAFT = 30;
 	private static final String DEFAULT_USERNAME = "Host";
 	private static final String LOCAL_HOST_IP = "127.0.0.1";
+	private static final String DEFAULT_NUM_SPELL_TRAPS_string = "1";
+	private static final int DEFAULT_NUM_SPELL_TRAPS_int = 1;
 	
 	public HostGameGUI() {
 		db = new DatabaseReader();
@@ -106,7 +108,7 @@ public class HostGameGUI {
 		panel_2.add(lblMinimumSpell);
 		
 		spellAndTrapTextField = new JTextField();
-		spellAndTrapTextField.setText("2");
+		spellAndTrapTextField.setText(DEFAULT_NUM_SPELL_TRAPS_string);
 		panel_2.add(spellAndTrapTextField);
 		spellAndTrapTextField.setColumns(4);
 		
@@ -193,7 +195,7 @@ public class HostGameGUI {
 	private void setDefaultCardNumbers() {
 		cards_per_round = 12;
 		extra_and_rituals_per_round = 2;
-		spells_traps_per_round = 2;
+		spells_traps_per_round = DEFAULT_NUM_SPELL_TRAPS_int;
 	}
 	
 	/**
