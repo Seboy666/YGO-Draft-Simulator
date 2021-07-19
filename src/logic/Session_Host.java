@@ -26,6 +26,8 @@ public class Session_Host extends Session {
 	private NetworkServer network;
 	private Set<RelatedCard> buffedCards;
 	
+	private static final double DEFAULT_BUFF_PERCENT = 20.0d;
+	
 	public Session_Host(boolean withElim, int cards_per_round, int extra_and_rituals_per_round,
 			int spells_traps_per_round, List<Player> playerList, DatabaseReader db, NetworkServer network) {
 		this.withElim = withElim;
@@ -101,7 +103,7 @@ public class Session_Host extends Session {
 	private void buffWeightOfRelatedCards(Card card) {
 		Set<RelatedCard> relatedCards = card.getRelatedCardNames();
 		for(RelatedCard rel : relatedCards) {
-			db.buffCardWeight(rel, 20.0d);
+			db.buffCardWeight(rel, DEFAULT_BUFF_PERCENT);
 			if(buffedCards.contains(rel)) {
 				rel.incrementNumber(); // if already in the list, increment its number
 			}
