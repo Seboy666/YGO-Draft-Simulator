@@ -127,13 +127,13 @@ public class DatabaseReader {
 	 */
 	public void buffCardWeight(RelatedCard relatedCard, double percent) {
 		double relativeWeight = 1;
-		if(relatedCard.getCategory() == "Monster") {
+		if(relatedCard.getCategory().contentEquals("Monster")) {
 			relativeWeight = (mainDeckCards.size() / 100) * percent;
 			
 			// this makes sure the card is of the correct category
 			for(String[] each : namesAndColorsDB) {
-				if(relatedCard.getFormattedName() == each[0]) { // once the matching name is found
-					if(each[1] == "Fusion" || each[1] == "Synchro" || each[1] == "Xyz") { // check it's color
+				if(relatedCard.getFormattedName().contentEquals(each[0])) { // once the matching name is found
+					if(each[1].contentEquals("Fusion") || each[1].contentEquals("Synchro") || each[1].contentEquals("Xyz")) { // check it's color
 						relatedCard.setCategoryToExtra();
 					}
 					relativeWeight = (extraDeckAndRitualCards.size() / 100) * percent;
@@ -141,7 +141,7 @@ public class DatabaseReader {
 				}
 			}
 		}
-		else if(relatedCard.getCategory() == "Spell") {
+		else if(relatedCard.getCategory().contentEquals("Spell")) {
 			relativeWeight = (spellAndTrapCards.size() / 100) * percent;
 		}
 		else { // ritual or extra
