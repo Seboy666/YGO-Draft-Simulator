@@ -25,8 +25,9 @@ public class Session_Host extends Session {
 	private DatabaseReader db;
 	private NetworkServer network;
 	private Set<RelatedCard> buffedCards;
+	private Set<RelatedCard> unbuffableCards;
 	
-	private static final double DEFAULT_BUFF_PERCENT = 20.0d;
+	private static final double DEFAULT_BUFF_PERCENT = 10.0d;
 	private static final double FLAT_BUFF_WEIGHT_FUSION_SUPPORT = 7.0d;
 	
 	public Session_Host(boolean withElim, int cards_per_round, int extra_and_rituals_per_round,
