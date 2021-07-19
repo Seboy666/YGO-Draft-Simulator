@@ -37,17 +37,11 @@ public class RelatedCard {
 	
 	/**
 	 * Decreases number by one, turns negative values into 0;
-	 * 
-	 * @return TRUE when the number is equal to 0.
 	 */
-	public boolean decrementNumber() {
+	public void decrementNumber() {
 		number--;
-		if(number > 0) {
-			return false;
-		}
-		else {
+		if(number < 0) {
 			number = 0;
-			return true;
 		}
 	}
 	
