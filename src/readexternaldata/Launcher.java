@@ -13,6 +13,14 @@ public class Launcher {
 				mainMenu.createGUI();
 			}
 		});
-		
+		/*
+		Card card;
+		DatabaseReader db = new DatabaseReader();
+		for(String each : db.monsterCardsNames) {
+			card = URLParser.parseCardNameToCard(each);
+			if(card.getCategory().contains("Tuner")) {
+				System.out.println(card.getFormattedName());
+			}
+		}*/
 	}
 }

@@ -26,6 +26,9 @@ public class Card_Trap extends Card{
 	@Override
 	public boolean isExtraDeck() { return isExtraDeck; }
 	
+	@Override
+	public String getCategory() { return property + " " + color; }
+	
 	public String getProperty() { return property; }
 	
 	@Override

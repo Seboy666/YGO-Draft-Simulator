@@ -14,6 +14,7 @@ public class DatabaseReader {
 	
 	private WeightedRandomBag<String> fusionCards; // lists for single colors
 	private WeightedRandomBag<String> monsterCards;
+	public List<String> monsterCardsNames;
 	private WeightedRandomBag<String> ritualCards;
 	private WeightedRandomBag<String> spellCards;
 	private WeightedRandomBag<String> synchroCards;
@@ -48,7 +49,7 @@ public class DatabaseReader {
 		this.trapCards = new WeightedRandomBag<String>();
 		this.tunerCards = new WeightedRandomBag<String>();
 		this.xyzCards = new WeightedRandomBag<String>();
-		
+		monsterCardsNames = new ArrayList<String>();
 		extraDeckAndRitualCards = new WeightedRandomBag<String>(); // Bags that include multiple colors
 		extraDeckCards = new WeightedRandomBag<String>();
 		mainDeckCards = new WeightedRandomBag<String>();
@@ -61,7 +62,6 @@ public class DatabaseReader {
 		
 		makeCardNamesDB();
 	}
-	
 	
 	public List<String[]> getFullDB() { return namesAndColorsDB; }
 	
@@ -198,6 +198,7 @@ public class DatabaseReader {
 			}
 			else if(each[1].equals(STR_MONSTER)) {
 				monsterCards.addEntry(each[0], DEFAULT_WEIGHT);
+				monsterCardsNames.add(each[0]);
 			}
 			else if(each[1].equals(STR_RITUAL)) {
 				ritualCards.addEntry(each[0], DEFAULT_WEIGHT);

@@ -37,6 +37,9 @@ public class Card_Monster extends Card {
 	public String getTypes() { return types; }
 	
 	@Override
+	public String getCategory() { return types; }
+	
+	@Override
 	public boolean isExtraDeck() { return isExtraDeck; }
 	
 	public String getLevel() { return level; }

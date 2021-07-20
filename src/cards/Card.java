@@ -39,7 +39,7 @@ public abstract class Card {
 	public Set<RelatedCard> getRelatedCardNames() { return related; }
 	
 	public abstract String getOneLineInfo();
-	
+	public abstract String getCategory();
 	public abstract String getBetterDesc();
 	
 	public void print() {
