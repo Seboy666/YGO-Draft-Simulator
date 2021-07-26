@@ -119,7 +119,7 @@ public class Session_Host extends Session {
 		fusionSupportCards.add(new RelatedCard("Super Polymerization", "Super_Polymerization", 1, "Spell"));
 		
 		for(RelatedCard each : fusionSupportCards) {
-			if(!buffedCards.contains(each)) {
+			if(!isBuffed(each.getFormattedName())) {
 				buffedCards.add(each);
 				db.buffCardWeight(each.getFormattedName(), FLAT_BUFF_WEIGHT_FUSION_SUPPORT);
 			}
@@ -146,16 +146,33 @@ public class Session_Host extends Session {
 						toRemove = each;
 					}
 				}
-				if(!toRemove.getFormattedName().contentEquals("EMPTY")) 
+				if(!toRemove.getFormattedName().contentEquals("EMPTY")) {
 					unbuffableCards.remove(toRemove); // make it buffable next time
+					System.out.println(toRemove.getFormattedName() + " IS NOW BUFFABLE");
+				}
 			}
 			else {
-				db.buffCardWeight(rel, DEFAULT_BUFF_PERCENT);
-				
-				if(!buffedCards.contains(rel)) 
+				if(!isBuffed(rel.getFormattedName())) {
 					buffedCards.add(rel); // if not in the list, add it to the list
+					db.buffCardWeight(rel, DEFAULT_BUFF_PERCENT);
+					
+					System.out.println("Buffed Cards: ");
+					for(RelatedCard each : buffedCards) {
+						System.out.println(each.getFormattedName());
+					}
+					System.out.println("\n");
+				}
 			}
 		}
+	}
+	
+	private boolean isBuffed(String formattedName) {
+		for (RelatedCard each : buffedCards) {
+			if(each.getFormattedName().contentEquals(formattedName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private boolean isUnbuffable(String formattedName) {
@@ -174,15 +191,23 @@ public class Session_Host extends Session {
 	 * @param card The card we want to debuff
 	 */
 	private void removeBuffOnce(Card card) {
-		if(!card.getRelatedCardNames().isEmpty()) { // if it has related cards, stop it from being buffed again
-			unbuffableCards.add(new RelatedCard(card.getName(), card.getFormattedName(), 1, card.getColor()));
+		if(!card.getRelatedCardNames().isEmpty()) { // if it has related cards,
+			if(!isUnbuffable(card.getFormattedName())) { // if it is not in the list, stop it from being buffed again
+				unbuffableCards.add(new RelatedCard(card.getName(), card.getFormattedName(), 1, card.getColor()));
+				
+				System.out.println("Unbuffable Cards: ");
+				for(RelatedCard each : unbuffableCards) {
+					System.out.println(each.getFormattedName());
+				}
+				System.out.println("**End**\n");
+			}
 		}
 		
 		RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
 		for(RelatedCard each : buffedCards) {
 			if(each.getFormattedName().contentEquals(card.getFormattedName())) {
 				each.decrementNumber();
-				if(each.getNumber() == 0) { // if number is at 0
+				if(each.getNumber() <= 0) { // if number is at 0
 					toRemove = each;
 					break;
 				}
