@@ -95,6 +95,13 @@ public class WeightedRandomBag<T extends Object> {
     	System.out.println("Object " + object + " not found in the list of entries!");
     	return;
     }
+    
+    public void setWeightOfAllEntries(double newWeight) {
+    	for(Entry entry : entries) {
+    		totalWeight = (totalWeight - entry.weight) + newWeight;
+    		entry.weight = newWeight;
+    	}
+    }
 
     public T getRandom() {
         return getRandom(false);
