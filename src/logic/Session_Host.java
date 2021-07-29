@@ -29,6 +29,7 @@ public class Session_Host extends Session {
 	
 	private static final double DEFAULT_BUFF_PERCENT = 10.0d;
 	private static final double FLAT_BUFF_WEIGHT_FUSION_SUPPORT = 7.0d;
+	private static final double FLAT_BUFF_WEIGHT_TUNERS = 2.0d;
 	
 	public Session_Host(boolean withElim, int cards_per_round, int extra_and_rituals_per_round,
 			int spells_traps_per_round, List<Player> playerList, DatabaseReader db, NetworkServer network) {
@@ -166,6 +167,11 @@ public class Session_Host extends Session {
 				}
 			}
 		}
+		
+		if(card.getCategory().contains("Synchro")) { // if the card is a synchro
+			db.buffAllTuners(FLAT_BUFF_WEIGHT_TUNERS); // TODO: are tuners added to buffed cards list?
+		}
+		
 	}
 	
 	private boolean isBuffed(String formattedName) {
@@ -200,6 +206,13 @@ public class Session_Host extends Session {
 		}
 	}
 	
+	private void checkRemoveAllTunerBuffs(Card card) {
+		if(card.getCategory().contains("Tuner")) {
+			db.buffAllTuners(DatabaseReader.DEFAULT_WEIGHT); // returns all tuners to default weight
+			// TODO: are tuners removed from buffed cards list?
+		}
+	}
+	
 	/**
 	 * Removes the card from buffed cards list if it has a number of 1, otherwise
 	 * decrement number.
@@ -207,6 +220,8 @@ public class Session_Host extends Session {
 	 * @param card The card we want to debuff
 	 */
 	private void removeBuffOnce(Card card) {
+		checkRemoveAllTunerBuffs(card);
+		
 		RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
 		for(RelatedCard each : buffedCards) {
 			if(each.getFormattedName().contentEquals(card.getFormattedName())) {
