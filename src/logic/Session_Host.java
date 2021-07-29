@@ -134,9 +134,11 @@ public class Session_Host extends Session {
 	 * @param card All cards related to this one will be buffed by this method
 	 */
 	private void buffWeightOfRelatedCards(Card card) {
+		makeUnbuffable(card); // when a card is picked, make it unbuffable
+		
 		Set<RelatedCard> relatedCards = card.getRelatedCardNames();
 		for(RelatedCard rel : relatedCards) {
-			if(rel.getFormattedName().contentEquals("Polymerzation")) 
+			if(rel.getFormattedName().contentEquals("Polymerization"))
 				buffFusionSupportCards();
 			
 			if(isUnbuffable(rel.getFormattedName())) { // if the card is unbuffable...
@@ -184,13 +186,7 @@ public class Session_Host extends Session {
 		return false;
 	}
 	
-	/**
-	 * Removes the card from buffed cards list if it has a number of 1, otherwise
-	 * decrement number.
-	 * 
-	 * @param card The card we want to debuff
-	 */
-	private void removeBuffOnce(Card card) {
+	private void makeUnbuffable(Card card) {
 		if(!card.getRelatedCardNames().isEmpty()) { // if it has related cards,
 			if(!isUnbuffable(card.getFormattedName())) { // if it is not in the list, stop it from being buffed again
 				unbuffableCards.add(new RelatedCard(card.getName(), card.getFormattedName(), 1, card.getColor()));
@@ -202,7 +198,15 @@ public class Session_Host extends Session {
 				System.out.println("**End**\n");
 			}
 		}
-		
+	}
+	
+	/**
+	 * Removes the card from buffed cards list if it has a number of 1, otherwise
+	 * decrement number.
+	 * 
+	 * @param card The card we want to debuff
+	 */
+	private void removeBuffOnce(Card card) {
 		RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
 		for(RelatedCard each : buffedCards) {
 			if(each.getFormattedName().contentEquals(card.getFormattedName())) {
