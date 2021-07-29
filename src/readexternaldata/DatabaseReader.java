@@ -155,6 +155,13 @@ public class DatabaseReader {
 		extraDeckAndRitualCards.recalcTotalWeight();
 	}
 	
+	public void buffAllTuners(double newWeight) {
+		tunerCards.setWeightOfAllEntries(newWeight);
+		
+		mainDeckCards.recalcTotalWeight();
+		spellAndTrapCards.recalcTotalWeight();
+	}
+	
 	private double calculateRelativeWeight(double percent, int totalSize) {
 		return (double)((totalSize * percent) / (100.0d - percent));
 	}
