@@ -110,13 +110,7 @@ public class NetworkServer extends NetworkHandler {
 		public LoginHandler(Socket socket) {
 			this.socket = socket;
 		}
-
-		/**
-		 * Services this thread's client by repeatedly requesting a screen name until a
-		 * unique one has been submitted, then acknowledges the name and registers the
-		 * output stream for the client in a global set, then repeatedly gets inputs and
-		 * broadcasts them.
-		 */
+		
 		public void run() {
 			try {
 				in = new Scanner(socket.getInputStream());
