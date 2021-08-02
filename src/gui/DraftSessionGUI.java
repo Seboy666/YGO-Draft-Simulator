@@ -118,15 +118,16 @@ public class DraftSessionGUI {
 			JMenuItem extractDeckMnItem = new JMenuItem("Save " + each.getUsername() + "'s deck");
 			theSettingsMenu.add(extractDeckMnItem);
 			extractDeckMnItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) { 
+				public void actionPerformed(ActionEvent e) {
 					try (PrintWriter out = new PrintWriter("data/" + each.getUsername() + ".ydk")) {
 					    out.println(each.extractDeckAsYGOProTxtString());
 					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
+						System.err.println(e1);
 						try (PrintWriter out = new PrintWriter("data/player" + each.getID() + ".ydk")) { // if the username is invalid, try with this file name instead
-							
+							out.println(each.extractDeckAsYGOProTxtString());
+							System.out.println("Successfully saved player deck");
 						} catch (FileNotFoundException e2) {
-							e1.printStackTrace();
+							System.err.println(e2);
 						}
 					}
 				}
