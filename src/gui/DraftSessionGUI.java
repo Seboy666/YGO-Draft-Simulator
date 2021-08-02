@@ -13,6 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+
 import cards.*;
 import logic.*;
 import net.miginfocom.swing.MigLayout;
@@ -23,12 +26,16 @@ public class DraftSessionGUI {
 	private Session mySession;
 	
 	private static final int NUM_OF_ROWS_FOR_LEFT_PANEL = 6;
+	private static final int WINDOW_TOP_BAR_HEIGHT = 120;
+	private static final double CARD_DIM_RATIO = 1.45;
 	
 	private JPanel cardListPanel;
 	private JMenu menuInfo;
 	private JMenu menuPickingPlayerName;
 	private JFrame floatingCardFrame;
 	private JPanel floatingCardInfoPanel;
+	
+	private int screenHeight;
 	
 	private static final String NOW_PICKING_STR = "Now picking: ";
 	
@@ -147,7 +154,10 @@ public class DraftSessionGUI {
 		cardPanel.setLayout(new BorderLayout());
 		JLabel lblImage;
 		try {
-			lblImage = new JLabel(new ImageIcon(card.getImage().getScaledInstance(110, 160, Image.SCALE_SMOOTH)));
+			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+			screenHeight = gd.getDisplayMode().getHeight();
+			int cardHeight = (screenHeight - WINDOW_TOP_BAR_HEIGHT)/NUM_OF_ROWS_FOR_LEFT_PANEL;
+			lblImage = new JLabel(new ImageIcon(card.getImage().getScaledInstance((int)(cardHeight/CARD_DIM_RATIO), cardHeight, Image.SCALE_SMOOTH)));
 		}
 		catch(Exception e) {
 			lblImage = new JLabel(card.getFormattedName());
