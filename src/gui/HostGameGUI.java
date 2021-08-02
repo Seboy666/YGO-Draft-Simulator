@@ -141,7 +141,12 @@ public class HostGameGUI {
 				catch(Exception excep) {
 					setDefaultCardNumbers();
 				}
-				Player host = new Player(usernameTxtField.getText(), 1); // host is always first player
+				String username = usernameTxtField.getText().replaceAll("/", "");
+				username = username.replaceAll(":", "");
+				if(username.length() > 15) {
+					username = username.substring(0, 14); // shorten username length
+				}
+				Player host = new Player(username, 1); // host is always first player
 				playerList.add(0, host);
 				network.setUsername(usernameTxtField.getText());
 				session = new Session_Host(withElim, cards_per_round, extra_and_rituals_per_round, spells_traps_per_round, playerList, db, network);

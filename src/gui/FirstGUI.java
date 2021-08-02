@@ -62,7 +62,11 @@ public class FirstGUI {
 		connectDraftBtn.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		connectDraftBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String username = usernameTxtField.getText();
+				String username = usernameTxtField.getText().replaceAll("/", "");
+				username = username.replaceAll(":", "");
+				if(username.length() > 15) {
+					username = username.substring(0, 14); // shorten username length
+				}
 				String ip = ipTxtField.getText();
 				NetworkClient networkHandler = new NetworkClient(username, ip); // connect to server here
 				try {
