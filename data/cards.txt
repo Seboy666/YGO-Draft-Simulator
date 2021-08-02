@@ -1964,7 +1964,6 @@ Skull_Meister	Monster
 Skull_Red_Bird	Monster
 Skull_Servant	Monster
 Skull-Mark_Ladybug	Monster
-Skuna,_the_Leonine_Rakan	Monster
 Sky_Dragon	Monster
 Sky_Scourge_Enrise	Monster
 Sky_Scourge_Invicil	Monster
