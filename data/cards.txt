@@ -143,7 +143,6 @@ Abyss_Soldier	Monster
 Abyssal_Kingshark	Monster
 Acrobat_Monkey	Monster
 Adhesive_Explosive	Monster
-Aggiba,_the_Malevolent_Sh'nn_S'yo	Monster
 Agido	Monster
 Airknight_Parshath	Monster
 Aitsu	Monster
@@ -251,7 +250,6 @@ Archlord_Kristya	Monster
 Archlord_Zerato	Monster
 Armageddon_Knight	Monster
 Armaill	Monster
-Armament_of_the_Lethal_Lords	Monster
 Armed_Dragon_LV10	Monster
 Armed_Dragon_LV3	Monster
 Armed_Dragon_LV5	Monster
@@ -454,7 +452,6 @@ Chaos_Sorcerer	Monster
 Chaosrider_Gustaph	Monster
 Charcoal_Inpachi	Monster
 Charm_of_Shabti	Monster
-Chimaera,_the_Master_of_Beasts	Monster
 Chiron_the_Mage	Monster
 Chopman_the_Desperate_Outlaw	Monster
 Chrysalis_Chicky	Monster
@@ -799,7 +796,6 @@ Elephant_Statue_of_Disaster	Monster
 Emes_the_Infinity	Monster
 Emissary_of_the_Afterlife	Monster
 Emissary_of_the_Oasis	Monster
-Emperor_of_Lightning	Monster
 Emperor_Sem	Monster
 Empress_Mantis	Monster
 Enchanting_Mermaid	Monster
@@ -1379,7 +1375,6 @@ Lord_British_Space_Fighter	Monster
 Lord_of_D.	Monster
 Lord_of_the_Lamp	Monster
 Lord_Poison	Monster
-Lorelei,_the_Symphonic_Arsenal	Monster
 Lost_Guardian	Monster
 Lucky_Pied_Piper	Monster
 Lumina,_Lightsworn_Summoner	Monster
@@ -1498,7 +1493,6 @@ Metal_Guardian	Monster
 Metal_Shooter	Monster
 Metallizing_Parasite_-_Lunatite	Monster
 Metalzoa	Monster
-Meteo_the_Matchless	Monster
 Meteor_Dragon	Monster
 Mezuki	Monster
 Mid_Shield_Gardna	Monster
@@ -1764,7 +1758,6 @@ Pursuit_Chaser	Monster
 Pyramid_Turtle	Monster
 Queen_Bird	Monster
 Queen_of_Autumn_Leaves	Monster
-Queen_of_Fate_-_Eternia	Monster
 Queen's_Bodyguard	Monster
 Queen's_Double	Monster
 Queen's_Knight	Monster
@@ -2090,7 +2083,6 @@ Terrorking_Archfiend	Monster
 Terrorking_Salmon	Monster
 Test_Ape	Monster
 Test_Tiger	Monster
-Testament_of_the_Arcane_Lords	Monster
 Testudo_erat_Numen	Monster
 Tethys,_Goddess_of_Light	Monster
 Teva	Monster
@@ -2216,14 +2208,12 @@ Two-Headed_King_Rex	Monster
 Two-Mouth_Darkruler	Monster
 Tyhone	Monster
 Tyhone_#2	Monster
-Tyr,_the_Vanquishing_Warlord	Monster
 Tyr_of_the_Nordic_Champions	Monster
 Tyranno_Infinity	Monster
 Tyrant_Dragon	Monster
 Tytannial,_Princess_of_Camellias	Monster
 UFO_Turtle	Monster
 UFOroid	Monster
-Ulevo	Monster
 Ultimate_Baseball_Kid	Monster
 Ultimate_Insect_LV1	Monster
 Ultimate_Insect_LV3	Monster
@@ -3355,7 +3345,6 @@ Genex_Ally_Axel	Synchro
 Genex_Ally_Triarm	Synchro
 Genex_Ally_Triforce	Synchro
 Geo_Genex	Synchro
-Grizzly,_the_Red_Star_Beast	Synchro
 Gungnir,_Dragon_of_the_Ice_Barrier	Synchro
 Hundred_Eyes_Dragon	Synchro
 Hydro_Genex	Synchro
@@ -3407,7 +3396,6 @@ Scrap_Twin_Dragon	Synchro
 Sea_Dragon_Lord_Gishilnodon	Synchro
 Shooting_Star_Dragon	Synchro
 Splendid_Rose	Synchro
-Stardust_Divinity	Synchro
 Stardust_Dragon	Synchro
 Stygian_Sergeants	Synchro
 Sun_Dragon_Inti	Synchro
