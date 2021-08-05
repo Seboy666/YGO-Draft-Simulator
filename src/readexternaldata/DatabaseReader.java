@@ -136,7 +136,7 @@ public class DatabaseReader {
 					if(each[1].contentEquals(STR_FUSION) || each[1].contentEquals(STR_SYNCHRO) || each[1].contentEquals(STR_XYZ)) { // check its color
 						relatedCard.setCategoryToExtra();
 					}
-					relativeWeight = (extraDeckAndRitualCards.size() / 100) * percent;
+					relativeWeight = calculateRelativeWeight(percent, extraDeckAndRitualCards.size());
 					break;
 				}
 			}
