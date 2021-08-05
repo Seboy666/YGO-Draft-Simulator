@@ -29,6 +29,7 @@ public class Session_Host extends Session {
 	
 	private static final double DEFAULT_BUFF_PERCENT = 10.0d;
 	private static final double FLAT_BUFF_WEIGHT_FUSION_SUPPORT = 7.0d;
+	private static final double FLAT_BUFF_WEIGHT_RITUAL_SUPPORT = 20.0d;
 	private static final double FLAT_BUFF_WEIGHT_TUNERS = 2.0d;
 	
 	public Session_Host(boolean withElim, int cards_per_round, int extra_and_rituals_per_round,
@@ -100,6 +101,25 @@ public class Session_Host extends Session {
 	public void addCard(Card card) { cardList.add(card); }
 	
 	/**
+	 * Gives some ritual support cards a small buff, all at once.
+	 */
+	private void buffRitualSupportCards() {
+		Set<RelatedCard> ritualSupportCards = new HashSet<RelatedCard>(); // TODO: does this really have to be coded this way?
+		ritualSupportCards.add(new RelatedCard("Sonic Bird", "Sonic_Bird", 1, "Monster"));
+		ritualSupportCards.add(new RelatedCard("Manju of the Ten Thousand Hands", "Manju_of_the_Ten_Thousand_Hands", 1, "Monster"));
+		ritualSupportCards.add(new RelatedCard("Senju of the Thousand Hands", "Senju_of_the_Thousand_Hands", 1, "Monster"));
+		ritualSupportCards.add(new RelatedCard("Preparation of Rites", "Preparation_of_Rites", 1, "Spell"));
+		ritualSupportCards.add(new RelatedCard("Advanced Ritual Art", "Advanced_Ritual_Art", 1, "Spell"));
+		
+		for(RelatedCard each : ritualSupportCards) {
+			if(!isBuffed(each.getFormattedName())) {
+				buffedCards.add(each);
+				db.buffCardWeight(each.getFormattedName(), FLAT_BUFF_WEIGHT_RITUAL_SUPPORT);
+			}
+		}
+	}
+	
+	/**
 	 * Gives some fusion support cards a small buff, all at once.
 	 */
 	private void buffFusionSupportCards() {
@@ -139,8 +159,10 @@ public class Session_Host extends Session {
 		
 		Set<RelatedCard> relatedCards = card.getRelatedCardNames();
 		for(RelatedCard rel : relatedCards) {
-			if(rel.getFormattedName().contentEquals("Polymerization"))
+			if(rel.getFormattedName().contentEquals("Polymerization") || rel.getFormattedName().contentEquals("Dark_Fusion"))
 				buffFusionSupportCards();
+			else if(card.getCategory().contains("Ritual"))
+				buffRitualSupportCards();
 			
 			if(isUnbuffable(rel.getFormattedName())) { // if the card is unbuffable...
 				RelatedCard toRemove = new RelatedCard("EMPTY", "EMPTY", 0, "none");
