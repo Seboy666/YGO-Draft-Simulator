@@ -28,6 +28,7 @@ public class DraftSessionGUI {
 	private static final int NUM_OF_ROWS_FOR_LEFT_PANEL = 6;
 	private static final int WINDOW_TOP_BAR_HEIGHT = 120;
 	private static final double CARD_DIM_RATIO = 1.45;
+	private static final double MAX_CARD_SIZE_SCREEN_RATIO = 0.160377;
 	
 	private JPanel cardListPanel;
 	private JMenu menuInfo;
@@ -36,6 +37,7 @@ public class DraftSessionGUI {
 	private JPanel floatingCardInfoPanel;
 	
 	private int screenHeight;
+	private int screenWidth;
 	
 	private static final String NOW_PICKING_STR = "Now picking: ";
 	
@@ -194,7 +196,7 @@ public class DraftSessionGUI {
 		JButton btnInfo = new JButton("Info");
 		btnInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { // this action is only local, no need for network
-				updateCardShown(floatingCardInfoPanel, card);
+				updateCardShown(floatingCardInfoPanel, card, false);
 				floatingCardFrame.setVisible(true);
 			}
 		});
@@ -270,11 +272,11 @@ public class DraftSessionGUI {
 		playerCardList.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent evt) {
 				if(playerCardList.getSelectedIndex() != -1) // if the list isn't empty
-					updateCardShown(cardDisplayPanel, player.getCardAt(playerCardList.getSelectedIndex()));
+					updateCardShown(cardDisplayPanel, player.getCardAt(playerCardList.getSelectedIndex()), true);
 			}
 			public void mouseReleased(MouseEvent evt) {
 				if(playerCardList.getSelectedIndex() != -1)  // if the list isn't empty
-					updateCardShown(cardDisplayPanel, player.getCardAt(playerCardList.getSelectedIndex()));
+					updateCardShown(cardDisplayPanel, player.getCardAt(playerCardList.getSelectedIndex()), true);
 			}
 		});
 		
@@ -322,7 +324,7 @@ public class DraftSessionGUI {
 	/**
 	 * Updates the secondary JFrame containing card information
 	 */
-	private JPanel updateCardShown(JPanel panel, Card card) {
+	private JPanel updateCardShown(JPanel panel, Card card, boolean resizeImg) {
 		panel.removeAll();
 		panel.setLayout(new BorderLayout(0, 0));
 		
@@ -330,7 +332,18 @@ public class DraftSessionGUI {
 		panel.add(cardPanel, BorderLayout.CENTER);
 		JLabel imageLabel;
 		try {
-			imageLabel = new JLabel(new ImageIcon(card.getImage()));
+			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+			screenWidth = gd.getDisplayMode().getWidth();
+			screenHeight = gd.getDisplayMode().getHeight();
+			
+			if((screenWidth == 1920 && screenHeight == 1080) || !resizeImg) {
+				imageLabel = new JLabel(new ImageIcon(card.getImage()));
+			}
+			else {
+				int cardWidth = (int)(screenWidth * MAX_CARD_SIZE_SCREEN_RATIO);
+				int cardHeight = (int)(cardWidth * CARD_DIM_RATIO);
+				imageLabel = new JLabel(new ImageIcon(card.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+			}
 		}
 		catch(Exception e) {
 			imageLabel = new JLabel(card.getFormattedName());
