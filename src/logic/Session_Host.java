@@ -110,6 +110,8 @@ public class Session_Host extends Session {
 		ritualSupportCards.add(new RelatedCard("Senju of the Thousand Hands", "Senju_of_the_Thousand_Hands", 1, "Monster"));
 		ritualSupportCards.add(new RelatedCard("Preparation of Rites", "Preparation_of_Rites", 1, "Spell"));
 		ritualSupportCards.add(new RelatedCard("Advanced Ritual Art", "Advanced_Ritual_Art", 1, "Spell"));
+		ritualSupportCards.add(new RelatedCard("Fulfillment of the Contract", "Fulfillment_of_the_Contract", 1, "Spell"));
+		ritualSupportCards.add(new RelatedCard("Gishki Chain", "Gishki_Chain", 1, "Monster"));
 		
 		for(RelatedCard each : ritualSupportCards) {
 			if(!isBuffed(each.getFormattedName())) {
