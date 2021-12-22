@@ -77,6 +77,26 @@ public class DraftSessionGUI {
 		JMenuBar menuBar = new JMenuBar();
 		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
 		
+		JMenu menuSettings = new JMenu("Settings");
+		JMenuItem refreshMnItem = new JMenuItem("Refresh");
+		menuSettings.add(refreshMnItem);
+		refreshMnItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { 
+				cardListPanel.removeAll();
+				populateLeftCardPanel(cardListPanel);
+				cardListPanel.repaint();
+				cardListPanel.revalidate();
+			}
+		});
+		addDeckExtractionToSettingsMenu(menuSettings);
+		
+		updateMenu();
+
+		menuBar.add(menuSettings);
+		menuBar.add(menuInfo);
+		menuBar.add(menuPickingPlayerName);
+		
+		
 		JPanel mainPanel = new JPanel(new MigLayout("", "[grow 150,fill][shrink,fill]", "[grow,fill]"));
 		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
@@ -100,24 +120,6 @@ public class DraftSessionGUI {
 		populatePlayerTabs(tabbedPane);
 		allPlayersDeckPanel.add(tabbedPane);
 		
-		JMenu menuSettings = new JMenu("Settings");
-		JMenuItem refreshMnItem = new JMenuItem("Refresh");
-		menuSettings.add(refreshMnItem);
-		refreshMnItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { 
-				cardListPanel.removeAll();
-				populateLeftCardPanel(cardListPanel);
-				cardListPanel.repaint();
-				cardListPanel.revalidate();
-			}
-		});
-		addDeckExtractionToSettingsMenu(menuSettings);
-		
-		updateMenu();
-
-		menuBar.add(menuSettings);
-		menuBar.add(menuInfo);
-		menuBar.add(menuPickingPlayerName);
 		
 		frame.setVisible(true);
 	}
