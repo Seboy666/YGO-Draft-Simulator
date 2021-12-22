@@ -96,7 +96,7 @@ public class DraftSessionGUI {
 		menuBar.add(menuInfo);
 		menuBar.add(menuPickingPlayerName);
 		
-		
+		frame.setVisible(true);
 		JPanel mainPanel = new JPanel(new MigLayout("", "[grow 150,fill][shrink,fill]", "[grow,fill]"));
 		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
@@ -119,9 +119,6 @@ public class DraftSessionGUI {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		populatePlayerTabs(tabbedPane);
 		allPlayersDeckPanel.add(tabbedPane);
-		
-		
-		frame.setVisible(true);
 	}
 	
 	private void addDeckExtractionToSettingsMenu(JMenu theSettingsMenu) {
