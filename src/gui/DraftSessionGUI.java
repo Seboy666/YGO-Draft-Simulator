@@ -26,10 +26,10 @@ public class DraftSessionGUI {
 	private Session mySession;
 	
 	private static final int NUM_OF_ROWS_FOR_LEFT_PANEL = 6;
-	private static final int WINDOW_TOP_BAR_HEIGHT = 120;
 	private static final double CARD_DIM_RATIO = 1.45;
 	private static final double MAX_CARD_SIZE_SCREEN_RATIO = 0.160377;
 	
+	private JFrame frame;
 	private JPanel cardListPanel;
 	private JMenu menuInfo;
 	private JMenu menuPickingPlayerName;
@@ -63,7 +63,7 @@ public class DraftSessionGUI {
 		floatingCardFrame.setContentPane(floatingCardInfoPanel);
 		
 		// Create a JFrame with a title, append to that title the player's username
-		JFrame frame = new JFrame("YGO Draft Simulator - " + mySession.getPlayerByID(mySession.getMyPlayerID()).getUsername());
+		frame = new JFrame("YGO Draft Simulator - " + mySession.getPlayerByID(mySession.getMyPlayerID()).getUsername());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 		    public void windowClosing(WindowEvent e) {
@@ -156,9 +156,9 @@ public class DraftSessionGUI {
 		cardPanel.setLayout(new BorderLayout());
 		JLabel lblImage;
 		try {
-			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			screenHeight = gd.getDisplayMode().getHeight();
-			int cardHeight = (screenHeight - WINDOW_TOP_BAR_HEIGHT)/NUM_OF_ROWS_FOR_LEFT_PANEL;
+			screenHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+			int topBarHeight =  frame.getInsets().top + menuInfo.getParent().getBounds().height;
+			int cardHeight = (screenHeight - topBarHeight)/NUM_OF_ROWS_FOR_LEFT_PANEL;
 			lblImage = new JLabel(new ImageIcon(card.getImage().getScaledInstance((int)(cardHeight/CARD_DIM_RATIO), cardHeight, Image.SCALE_SMOOTH)));
 		}
 		catch(Exception e) {
