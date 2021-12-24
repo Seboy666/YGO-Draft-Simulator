@@ -278,7 +278,7 @@ public class DraftSessionGUI {
 	private JPanel createPlayerDeckPanel(Player player) {
 		JPanel playerPanel = new JPanel(new GridLayout(1, 2, 0, 0));
 		
-		JPanel cardDisplayPanel = new JPanel(new BorderLayout());
+		JPanel cardDisplayPanel = new JPanel();
 		
 		JList<String> playerCardList = new JList<String>(player.getListModel());
 		
