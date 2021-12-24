@@ -15,6 +15,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import cards.*;
 import logic.*;
@@ -97,10 +99,18 @@ public class DraftSessionGUI {
 		menuBar.add(menuPickingPlayerName);
 		
 		frame.setVisible(true);
-		JPanel mainPanel = new JPanel(new MigLayout("", "[grow 150,fill][shrink,fill]", "[grow,fill]"));
+		JPanel mainPanel = new JPanel(new GridBagLayout());
 		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
-		mainPanel.add(cardListPanel, "cell 0 0,alignx center");
+		GridBagConstraints constr = new GridBagConstraints();
+		
+		// Make first cell wider than the next
+		constr.fill = GridBagConstraints.BOTH;
+		constr.gridx = 0;
+		constr.gridy = 0;
+		constr.weightx = 0.7;
+		
+		mainPanel.add(cardListPanel, constr);
 		
 		int numOfColumnsForDraftedCards;
 		if(mySession.getCardsPerRound() % NUM_OF_ROWS_FOR_LEFT_PANEL == 0) {
@@ -113,7 +123,12 @@ public class DraftSessionGUI {
 		populateLeftCardPanel(cardListPanel);
 		
 		JPanel allPlayersDeckPanel = new JPanel();
-		mainPanel.add(allPlayersDeckPanel, "cell 1 0,alignx right");
+		
+		// make second collumn cell narrower
+		constr.gridx = 1;
+		constr.weightx = 0.1;
+		
+		mainPanel.add(allPlayersDeckPanel, constr);
 		allPlayersDeckPanel.setLayout(new GridLayout(1, mySession.getTotalPlayers(), 0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
