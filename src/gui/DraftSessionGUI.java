@@ -261,8 +261,7 @@ public class DraftSessionGUI {
 	}
 	
 	private JPanel createPlayerDeckPanel(Player player) {
-		JPanel playerPanel = new JPanel(new BorderLayout());
-		JLabel lblPlayerName = new JLabel(player.getUsername());
+		JPanel playerPanel = new JPanel(new GridLayout(1, 2, 0, 0));
 		
 		JPanel cardDisplayPanel = new JPanel(new BorderLayout());
 		
@@ -280,10 +279,9 @@ public class DraftSessionGUI {
 		});
 		
 		JScrollPane playerCardListScrollPane = new JScrollPane(playerCardList);
-		playerPanel.add(lblPlayerName, BorderLayout.NORTH);
-		playerPanel.add(playerCardListScrollPane, BorderLayout.WEST);
-		
-		playerPanel.add(cardDisplayPanel, BorderLayout.CENTER);
+
+		playerPanel.add(playerCardListScrollPane);
+		playerPanel.add(cardDisplayPanel);
 		
 		return playerPanel;
 	}
