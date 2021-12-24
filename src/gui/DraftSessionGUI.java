@@ -358,7 +358,13 @@ public class DraftSessionGUI {
 			}
 		}
 		catch(Exception e) {
-			imageLabel = new JLabel(card.getFormattedName());
+			try{
+				// use an image in case the website cant find the image
+				imageLabel = new JLabel(new ImageIcon("data/invalid.jpg"));
+			}
+			catch(Exception uwu){
+				imageLabel = new JLabel(card.getFormattedName());
+			}
 		}
 		cardPanel.add(imageLabel);
 		
